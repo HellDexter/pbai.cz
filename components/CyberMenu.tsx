@@ -1,6 +1,6 @@
 
 import React, { Suspense } from 'react';
-import { ArrowLeft, BrainCircuit, Presentation, ArrowRight, ClipboardList, PlayCircle, ShieldAlert, Newspaper } from 'lucide-react';
+import { ArrowLeft, BrainCircuit, Presentation, ArrowRight, ClipboardList, PlayCircle, ShieldAlert, Newspaper, ArrowUp, Shield } from 'lucide-react';
 import { courseData, cyberVideos } from '../data';
 
 interface Props {
@@ -14,6 +14,7 @@ const AuditScreen = React.lazy(() => import('./AuditScreen'));
 const PresentationScreen = React.lazy(() => import('./PresentationScreen'));
 const VideoScreen = React.lazy(() => import('./VideoScreen'));
 const QuizSectionWrapper = React.lazy(() => import('./QuizSectionWrapper'));
+const CyberGuardian = React.lazy(() => import('./CyberGuardian'));
 
 const CyberMenu: React.FC<Props> = ({ onNavigate, onBack, onSelectPresentation }) => {
   // Sticky Nav State
@@ -109,12 +110,23 @@ const CyberMenu: React.FC<Props> = ({ onNavigate, onBack, onSelectPresentation }
 
       {/* HERO SECTION - Menu */}
       <header className="mb-16 animate-fade-in-up text-center md:text-left">
-        <h1 className="text-3xl md:text-6xl font-display text-white mb-6 uppercase tracking-tighter">
-          Kyberbezpečnost
+        <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-6 uppercase tracking-tight">
+          KYBER <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">BEZPEČNOST</span>
         </h1>
-        <p className="text-gray-300 text-lg md:text-xl font-light max-w-3xl leading-relaxed">
-          Vítejte v zóně pro absolventy. Zde naleznete kompletní materiály z vašeho školení, rozšířené o interaktivní nástroje pro praxi. Udržujte své znalosti aktuální a vaše zařízení v bezpečí.
+        <p className="text-xl text-gray-300 max-w-3xl leading-relaxed mb-6">
+          Vítejte v zóně pro absolventy! Tento prostor slouží jako vaše <strong>celoživotní vzdělávací platforma</strong>.
+          Najdete zde kompletní materiály ze školení, interaktivní nástroje pro audit vaší bezpečnosti a novinky z kyber světa.
         </p>
+        <div className="p-4 bg-emerald-900/10 border border-emerald-500/20 rounded-xl max-w-3xl inline-block text-left">
+          <p className="text-emerald-400 flex items-start gap-3 text-sm md:text-base">
+            <Shield className="w-5 h-5 flex-shrink-0 mt-0.5 animate-pulse" />
+            <span>
+              <strong>NOVINKA:</strong> Pro rychlou pomoc jsme integrovali <strong>AI Cyber Guardiana</strong>.
+              Najdete ho vpravo dole (ikona štítu). Je to váš osobní asistent specializovaný na
+              český zákon o kybernetické bezpečnosti a směrnici NIS2.
+            </span>
+          </p>
+        </div>
       </header>
 
       {/* Menu Cards */}
@@ -174,8 +186,13 @@ const CyberMenu: React.FC<Props> = ({ onNavigate, onBack, onSelectPresentation }
         className="fixed bottom-8 right-8 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full backdrop-blur-md border border-white/10 shadow-2xl z-50 transition-all opacity-50 hover:opacity-100"
         title="Nahoru"
       >
-        <ArrowLeft className="w-6 h-6 rotate-90" />
+        <ArrowUp className="w-6 h-6" />
       </button>
+
+      {/* Cyber Guardian Chatbot */}
+      <Suspense fallback={null}>
+        <CyberGuardian />
+      </Suspense>
 
     </div>
   );
