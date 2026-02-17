@@ -26,7 +26,7 @@ export const aiVideos: Video[] = [
 
 export const courseData: Block[] = [
   {
-    id: 1, title: "Blok 1: Úvod do kyberbezpečnosti", description: "Psychologie útoků a CIA triáda.", icon: "ShieldAlert",
+    id: 1, title: "Blok 1: Úvod do kyberbezpečnosti", description: "Psychologie útoků a CIA triáda.", icon: "ShieldAlert", gammaUrl: "https://gamma.app/embed/r24hcdtkoavtxvd",
     questions: [
       { id: 1, question: "Jaká je základní myšlenka útoků?", options: ["Technologie", "Člověk", "Hardware", "Servery"], correctAnswer: 1, hint: "Útočník prolamuje člověka, ne systém." },
       { id: 2, question: "Co znamená zkratka CIA?", options: ["Agentura", "Důvěrnost, Integrita, Dostupnost", "Počítače", "Audit"], correctAnswer: 1, hint: "Confidentiality, Integrity, Availability." },
@@ -41,7 +41,7 @@ export const courseData: Block[] = [
     ]
   },
   {
-    id: 2, title: "Blok 2: Základy internetu", description: "HTTPS, domény a ochrana účtů.", icon: "Globe",
+    id: 2, title: "Blok 2: Základy internetu", description: "HTTPS, domény a ochrana účtů.", icon: "Globe", gammaUrl: "https://gamma.app/embed/gtqi1rkuvdn8gp9",
     questions: [
       { id: 1, question: "Zámeček v prohlížeči znamená bezpečí?", options: ["Ano", "Ne, jen šifrování", "Ano, od Google", "Bez virů"], correctAnswer: 1, hint: "Šifrovaný může být i podvodný web." },
       { id: 2, question: "Která doména je podezřelá pro banku?", options: ["banka.cz", "ib.banka.cz", "banka-overeni.cz", "platby.banka.cz"], correctAnswer: 2, hint: "Falešná hlavní doména." },
@@ -56,7 +56,7 @@ export const courseData: Block[] = [
     ]
   },
   {
-    id: 3, title: "Blok 3: Zařízení a sítě", description: "Zabezpečení PC a Wi-Fi.", icon: "Wifi", questions: [
+    id: 3, title: "Blok 3: Zařízení a sítě", description: "Zabezpečení PC a Wi-Fi.", icon: "Wifi", gammaUrl: "https://gamma.app/embed/sw8fkuzsjvzw8hs", questions: [
       { id: 1, question: "Aktualizace jsou k čemu?", options: ["Vzhled", "Oprava chyb", "Zpomalení", "Emoji"], correctAnswer: 1, hint: "Zalepují díry pro hackery." },
       { id: 2, question: "Firewall?", options: ["Hudba", "Kontrola provozu", "Antivir", "Chlazení"], correctAnswer: 1, hint: "Síto pro data." },
       { id: 3, question: "Stačí Defender?", options: ["Ne", "Ano, dobrý základ", "Placený", "Jen offline"], correctAnswer: 1, hint: "Dnes velmi silný." },
@@ -70,7 +70,7 @@ export const courseData: Block[] = [
     ]
   },
   {
-    id: 4, title: "Blok 4: Bankovnictví", description: "Ochrana karet a financí.", icon: "CreditCard", questions: [
+    id: 4, title: "Blok 4: Bankovnictví", description: "Ochrana karet a financí.", icon: "CreditCard", gammaUrl: "https://gamma.app/embed/50rktgysrfatwbu", questions: [
       { id: 1, question: "Vishing?", options: ["Vir", "Hovor", "Mail", "Krypto"], correctAnswer: 1, hint: "Podvodný telefonát." },
       { id: 2, question: "Chce banka heslo?", options: ["Ano", "Nikdy", "U potíží", "Občas"], correctAnswer: 1, hint: "Nikdy ho nepotřebují." },
       { id: 3, question: "Bazar podvod?", options: ["Cena", "Falešný kurýr", "Předání", "Dobírka"], correctAnswer: 1, hint: "Chtějí údaje o kartě k 'příjmu'." },
@@ -84,7 +84,7 @@ export const courseData: Block[] = [
     ]
   },
   {
-    id: 5, title: "Blok 5: Kryptoměny", description: "Blockchain a peněženky.", icon: "Bitcoin", questions: [
+    id: 5, title: "Blok 5: Kryptoměny", description: "Blockchain a peněženky.", icon: "Bitcoin", gammaUrl: "https://gamma.app/embed/c2gss863zymwaa3", questions: [
       { id: 1, question: "Vratné platby?", options: ["Ano", "Ne", "Bitcoin", "Banka"], correctAnswer: 1, hint: "Jsou definitivní." },
       { id: 2, question: "Co je Seed?", options: ["Mince", "12-24 slov", "Heslo k app", "Burza"], correctAnswer: 1, hint: "Klíč k obnově." },
       { id: 3, question: "Kam Seed?", options: ["Mail", "Papír offline", "Mobil", "USB"], correctAnswer: 1, hint: "Jen offline." },
@@ -98,7 +98,7 @@ export const courseData: Block[] = [
     ]
   },
   {
-    id: 6, title: "Blok 6: Incidenty", description: "První pomoc při útoku.", icon: "Siren", questions: [
+    id: 6, title: "Blok 6: Incidenty", description: "První pomoc při útoku.", icon: "Siren", gammaUrl: "https://gamma.app/embed/47zu26hursvze6w", questions: [
       { id: 1, question: "Pravidlo č. 1?", options: ["Smazat", "Nepanikařit", "Vypnout proud", "Křičet"], correctAnswer: 1, hint: "Klid." },
       { id: 2, question: "Napadený PC?", options: ["Nechat", "Odpojit síť", "Restart", "Prodat"], correctAnswer: 1, hint: "Izolace." },
       { id: 3, question: "Kde měnit heslo?", options: ["Stejný PC", "Jiný bezpečný", "Nikde", "Poznámky"], correctAnswer: 1, hint: "Keylogger v napadeném PC." },
@@ -112,7 +112,7 @@ export const courseData: Block[] = [
     ]
   },
   {
-    id: 7, title: "Blok 7: Pravidla", description: "Zálohování a hygiena.", icon: "ClipboardCheck", questions: [
+    id: 7, title: "Blok 7: Implementace bezpečnostních opatření", description: "Zálohování a hygiena.", icon: "ClipboardCheck", gammaUrl: "https://gamma.app/embed/him3c2lvp8rtr3p", questions: [
       { id: 1, question: "Nejdůležitější?", options: ["HW", "Systém a návyky", "Internet", "Vzhled"], correctAnswer: 1, hint: "Lidé." },
       { id: 2, question: "Minimální oprávnění?", options: ["Nikdo", "Jen co potřebuje", "Admin vše", "Uživatel"], correctAnswer: 1, hint: "Omezení škod." },
       { id: 3, question: "Nucená změna hesla?", options: ["Ano", "Ne (rizikové)", "Měsíc", "Děti"], correctAnswer: 1, hint: "Působí frustraci." },
@@ -140,7 +140,7 @@ export const courseData: Block[] = [
     ]
   },
   {
-    id: 9, title: "Blok 9: Role AI", description: "Deepfakes a budoucnost.", icon: "Bot", questions: [
+    id: 9, title: "Blok 9: Role AI", description: "Deepfakes a budoucnost.", icon: "Bot", gammaUrl: "https://gamma.app/embed/da2nk7b93e89j4z", questions: [
       { id: 1, question: "AI a Phishing?", options: ["Horší", "Bez chyb a osobní", "Nijak", "Nechodí"], correctAnswer: 1, hint: "Kvalita textů." },
       { id: 2, question: "Voice Cloning?", options: ["Echo", "Klonování hlasu", "Odposlech", "Záznam"], correctAnswer: 1, hint: "Stačí krátký vzorek." },
       { id: 3, question: "Deepfake?", options: ["Spánek", "Falešné video", "Fotka", "Monitor"], correctAnswer: 1, hint: "Syntetické médium." },

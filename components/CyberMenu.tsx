@@ -26,20 +26,20 @@ const CyberMenu: React.FC<Props> = ({ onNavigate, onBack }) => {
         <h1 className="text-3xl md:text-6xl font-display text-white mb-6 uppercase tracking-tighter">
           Kyberbezpečnost
         </h1>
-        <p className="text-gray-500 text-lg md:text-xl font-light max-w-3xl leading-relaxed">
-          Zvolte formu studia. Testujte se, prohlížejte materiály nebo sledujte nejnovější bezpečnostní incidenty ze světa.
+        <p className="text-gray-300 text-lg md:text-xl font-light max-w-3xl leading-relaxed">
+          Vítejte v zóně pro absolventy. Zde naleznete kompletní materiály z vašeho školení, rozšířené o interaktivní nástroje pro praxi. Udržujte své znalosti aktuální a vaše zařízení v bezpečí.
         </p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
 
         {[
-          { id: 'quizzes', title: 'Kvízy', desc: '9 interaktivních bloků pro testování znalostí.', icon: BrainCircuit, color: 'emerald' },
-          { id: 'presentations', title: 'Prezentace', desc: 'Teoretické základy a materiály ke studiu.', icon: Presentation, color: 'purple' },
-          { id: 'videos', title: 'Videa', desc: 'Video tutoriály a záznamy praktických lekcí.', icon: PlayCircle, color: 'cyan' },
-          { id: 'practical_exercises', title: 'Audit', desc: 'Zkontrolujte si zabezpečení svého zařízení.', icon: ClipboardList, color: 'pink' },
-          { id: 'security_scanner', title: 'Bezpečnostní Lab', desc: 'Skenery úniků dat a reputace podezřelých URL.', icon: ShieldAlert, color: 'rose' },
-          { id: 'cyber_news', title: 'Kyber Zprávy', desc: 'Aktuální bezpečnostní novinky ze světa přeložené AI.', icon: Newspaper, color: 'amber' }
+          { id: 'quizzes', title: 'Kvízy', desc: 'Procvičte si znalosti z jednotlivých bloků školení. Ověřte si, co jste si zapamatovali a kde máte mezery.', icon: BrainCircuit, color: 'emerald' },
+          { id: 'presentations', title: 'Prezentace', desc: 'Původní slidy z vašeho školení. Připomeňte si klíčové body a teoretické základy kdykoliv potřebujete.', icon: Presentation, color: 'purple' },
+          { id: 'videos', title: 'Videa', desc: 'Doplňující video materiály a záznamy, které rozšiřují témata probíraná v jednotlivých blocích.', icon: PlayCircle, color: 'cyan' },
+          { id: 'practical_exercises', title: 'Audit', desc: 'Váš osobní AI bezpečnostní asistent. Provede vás zabezpečením PC, telefonu i domácí sítě krok za krokem.', icon: ClipboardList, color: 'pink' },
+          { id: 'security_scanner', title: 'Bezpečnostní Lab', desc: 'Nástroje pro analýzu vaší digitální stopy. Zkontrolujte úniky hesel (HIBP) a reputaci podezřelých odkazů.', icon: ShieldAlert, color: 'rose' },
+          { id: 'cyber_news', title: 'Kyber Zprávy', desc: 'Aktuální hrozby a novinky ze světa bezpečnosti, srozumitelně přeložené a shrnuté umělou inteligencí.', icon: Newspaper, color: 'amber' }
         ].map((item) => (
           <button
             key={item.id}
@@ -55,7 +55,7 @@ const CyberMenu: React.FC<Props> = ({ onNavigate, onBack }) => {
                 <ArrowRight className="w-5 h-5 text-gray-700 group-hover:text-white transition-colors" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2 font-display uppercase tracking-tight">{item.title}</h3>
-              <p className="text-sm text-gray-500 font-light leading-relaxed mb-4">{item.desc}</p>
+              <p className="text-sm text-gray-300 leading-relaxed mb-4">{item.desc}</p>
             </div>
           </button>
         ))}
