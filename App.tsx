@@ -15,6 +15,8 @@ import AuditScreen from './components/AuditScreen';
 import VideoScreen from './components/VideoScreen';
 import SecurityScanner from './components/SecurityScanner';
 import CyberNews from './components/CyberNews';
+import Footer from './components/Footer';
+import CookieConsent from './components/CookieConsent';
 import { supabase } from './supabaseClient';
 
 type View = 'login' | 'dashboard' | 'cyber_menu' | 'ai_menu' | 'quizzes' | 'presentations' | 'presentation_detail' | 'practical_exercises' | 'videos' | 'quiz' | 'result' | 'security_scanner' | 'cyber_news';
@@ -194,6 +196,7 @@ const App: React.FC = () => {
     );
   }
 
+
   const currentModuleData = activeModule === 'cyber' ? courseData : aiCourseData;
   const currentVideos = activeModule === 'cyber' ? cyberVideos : aiVideos;
 
@@ -201,14 +204,14 @@ const App: React.FC = () => {
   switch (currentView) {
     case 'login': content = <LoginScreen onLoginSuccess={() => { }} />; break;
     case 'dashboard': content = <Dashboard onNavigate={(m) => { setActiveModule(m); setCurrentView(m === 'cyber' ? 'cyber_menu' : 'ai_menu'); }} userProfile={userProfile} onLogout={handleLogout} />; break;
-    case 'cyber_menu': content = <CyberMenu onNavigate={(v) => setCurrentView(v)} onBack={() => setCurrentView('dashboard')} />; break;
+    case 'cyber_menu': content = <CyberMenu onNavigate={(v) => setCurrentView(v)} onBack={() => setCurrentView('dashboard')} onSelectPresentation={startPresentation} />; break;
     case 'ai_menu': content = <AiMenu onNavigate={(v) => setCurrentView(v)} onBack={() => setCurrentView('dashboard')} />; break;
     case 'quizzes': content = <WelcomeScreen blocks={currentModuleData} onStartBlock={startBlock} onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} theme={activeModule === 'cyber' ? 'emerald' : 'purple'} />; break;
     case 'presentations': content = <PresentationScreen blocks={currentModuleData} onSelectBlock={startPresentation} onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} theme={activeModule === 'cyber' ? 'cyan' : 'purple'} />; break;
     case 'presentation_detail':
       const pBlock = currentModuleData.find(b => b.id === selectedPresentationId);
       if (pBlock) {
-        content = <PresentationDetailScreen block={pBlock} onBack={() => setCurrentView('presentations')} theme={activeModule === 'cyber' ? 'cyan' : 'purple'} />;
+        content = <PresentationDetailScreen block={pBlock} onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} theme={activeModule === 'cyber' ? 'cyan' : 'purple'} />;
       }
       break;
     case 'practical_exercises': content = <AuditScreen onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} />; break;
@@ -251,10 +254,12 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-[#050505] overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200 font-inter">
+    <div className="relative min-h-screen w-full bg-[#050505] overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200 font-inter flex flex-col">
       <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none fixed"></div>
       <GridBeams />
-      <div className="relative z-10 w-full h-full">{content}</div>
+      <div className="relative z-10 w-full flex-grow">{content}</div>
+      <div className="relative z-20"><Footer /></div>
+      <CookieConsent />
     </div>
   );
 };

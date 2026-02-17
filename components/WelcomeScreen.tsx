@@ -17,8 +17,8 @@ const WelcomeScreen: React.FC<Props> = ({ blocks, onStartBlock, onBack, theme = 
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
-      
-      <button 
+
+      <button
         onClick={onBack}
         className="mb-10 text-gray-500 hover:text-white transition-all duration-300 flex items-center gap-3 text-xs font-bold tracking-widest uppercase group font-mono"
       >
@@ -39,10 +39,10 @@ const WelcomeScreen: React.FC<Props> = ({ blocks, onStartBlock, onBack, theme = 
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
         {blocks.map((block, index) => {
-           // @ts-ignore
-           const IconComponent = Icons[block.icon] || Icons.HelpCircle;
+          // @ts-ignore
+          const IconComponent = Icons[block.icon] || Icons.HelpCircle;
 
-           return (
+          return (
             <button
               key={block.id}
               onClick={() => onStartBlock(block.id)}
@@ -51,28 +51,28 @@ const WelcomeScreen: React.FC<Props> = ({ blocks, onStartBlock, onBack, theme = 
             >
               <div className={`relative flex-grow bg-[#0a0a0a]/60 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 overflow-hidden hover:bg-[#0a0a0a]/90 transition-all duration-300 group-hover:border-${colorClass}-500/30 hover:-translate-y-1`}>
                 <div className="flex justify-between items-start mb-6">
-                    <div className={`w-12 h-12 rounded-xl bg-${colorClass}-500/10 border border-${colorClass}-500/20 flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                         <IconComponent className={`w-6 h-6 text-${colorClass}-400`} />
-                    </div>
-                    <div className="text-[10px] font-mono text-gray-600 border border-white/5 px-2 py-1 rounded-md bg-black/40 tracking-widest uppercase">
-                        Blok {block.id}
-                    </div>
+                  <div className={`w-12 h-12 rounded-xl bg-${colorClass}-500/10 border border-${colorClass}-500/20 flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                    <IconComponent className={`w-6 h-6 text-${colorClass}-400`} />
+                  </div>
+                  <div className="text-xs font-mono text-gray-600 border border-white/5 px-2 py-1 rounded-md bg-black/40 tracking-widest uppercase">
+                    Blok {block.id}
+                  </div>
                 </div>
 
                 <h3 className="text-lg md:text-xl font-bold text-white mb-2 font-display uppercase leading-tight break-words hyphens-auto">
                   {block.title.replace(/Blok \d+: /, "")}
                 </h3>
-                
-                <p className="text-xs md:text-sm text-gray-500 font-light leading-relaxed line-clamp-2">
+
+                <p className="text-sm md:text-base text-gray-400 font-light leading-relaxed line-clamp-2">
                   {block.description}
                 </p>
 
-                <div className={`mt-6 flex items-center gap-2 text-[10px] font-bold text-${colorClass}-500 uppercase tracking-widest font-mono`}>
-                   Spustit test <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                <div className={`mt-6 flex items-center gap-2 text-xs font-bold text-${colorClass}-500 uppercase tracking-widest font-mono`}>
+                  Spustit test <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </button>
-           );
+          );
         })}
       </div>
     </div>

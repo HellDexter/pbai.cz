@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Check, Bot, X, ShieldAlert, ShieldCheck, Send, Loader2, AlertTriangle, ChevronDown, ChevronUp, Zap, Key, ArrowRight } from 'lucide-react';
+import { Check, Bot, X, ShieldAlert, ShieldCheck, Send, Loader2, AlertTriangle, ChevronDown, ChevronUp, Monitor, Smartphone, Wifi, HardDrive, Info, Settings, Key, ArrowRight, ImageIcon, Paperclip } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 
 interface Props {
@@ -15,56 +15,189 @@ interface Message {
 interface AuditItem {
   id: string;
   label: string;
-  why: string;
+  shortDesc: string;
+  significance: string;
   risk: string;
+  instructions: {
+    windows?: string[];
+    macos?: string[];
+    android?: string[];
+    ios?: string[];
+    general?: string[];
+  };
   aiPrompt: string;
 }
 
 interface AuditSection {
+  id: string;
   title: string;
   description: string;
+  icon: any;
   items: AuditItem[];
+  platformType?: 'desktop' | 'mobile'; // To determine which toggle to show
 }
 
 const AUDIT_DATA: AuditSection[] = [
   {
-    title: "Sekce 1: Počítač (Windows/macOS)",
-    description: "Zabezpečení operačního systému je první linií obrany proti útočníkům.",
+    id: "pc",
+    title: "Počítač",
+    description: "Operační systém je základním kamenem digitální obrany.",
+    icon: Monitor,
+    platformType: 'desktop',
     items: [
-      { id: "pc_updates", label: "Automatické aktualizace systému", why: "Zajišťují, že máte nejnovější bezpečnostní záplaty.", risk: "Hackeři využívají nezáplatované chyby k ovládnutí PC.", aiPrompt: "Jak nastavit automatické aktualizace?" },
-      { id: "pc_firewall", label: "Aktivní Firewall", why: "Filtruje nebezpečný provoz z internetu.", risk: "Bez firewallu jsou vaše data v síti viditelná všem.", aiPrompt: "Proč mít aktivní firewall?" },
-      { id: "pc_antivir", label: "Funkční Antivirus / Defender", why: "Identifikuje a blokuje malware před spuštěním.", risk: "Ransomware může zašifrovat všechna vaše data.", aiPrompt: "Stačí Windows Defender?" },
-      { id: "pc_encryption", label: "Šifrování disku (BitLocker/FileVault)", why: "Chrání data při fyzické krádeži zařízení.", risk: "Bez šifrování zloděj přečte disk v jiném PC.", aiPrompt: "Jak zapnout šifrování disku?" }
+      {
+        id: "pc_updates",
+        label: "Automatické aktualizace",
+        shortDesc: "OS a aplikace se aktualizují samy.",
+        significance: "Vývojáři softwaru neustále opravují nalezené bezpečnostní díry. Automatické aktualizace zajišťují, že tyto opravy (patche) dostanete dříve, než je stihnou útočníci zneužít.",
+        risk: "Nezáplatovaný systém je jako dům s otevřenými okny. Hackeři používají automatizované skenery na staré verze softwaru (viz WannaCry).",
+        instructions: {
+          windows: ["Start -> Nastavení -> Windows Update.", "Zapněte 'Získat nejnovější aktualizace, hned jak budou k dispozici'."],
+          macos: ["Apple menu () -> Nastavení systému -> Obecné -> Aktualizace softwaru.", "Klikněte na 'i' vedle Automatické aktualizace a vše zapněte."]
+        },
+        aiPrompt: "Co dělat, když se aktualizace zasekne?"
+      },
+      {
+        id: "pc_firewall",
+        label: "Aktivní Firewall",
+        shortDesc: "Brána kontrolující síťový provoz.",
+        significance: "Firewall funguje jako vrátný. Rozhoduje, který síťový provoz pustí dovnitř. Bez něj je váš počítač na veřejné Wi-Fi viditelný pro všechny.",
+        risk: "Bez firewallu se může útočník ve stejné síti připojit k vašim sdíleným složkám nebo ovládnout služby na pozadí.",
+        instructions: {
+          windows: ["Start -> 'Firewall a ochrana sítě'.", "Ujistěte se, že u Privátní i Veřejné sítě svítí 'Zapnuto'."],
+          macos: ["Nastavení systému -> Síť -> Firewall.", "Přepínač musí být 'Zapnuto'."]
+        },
+        aiPrompt: "Jak poznám, že můj firewall blokuje program, který potřebuji?"
+      },
+      {
+        id: "pc_antivir",
+        label: "Antivirus / Defender",
+        shortDesc: "Real-time ochrana proti malwaru.",
+        significance: "Moderní antiviry sledují 'chování' programů. Pokud se Word začne chovat podezřele (např. mazat soubory), antivirus ho zastaví.",
+        risk: "Malware může běžet na pozadí měsíce bez povšimnutí, těžit kryptoměny nebo krást hesla z prohlížeče.",
+        instructions: {
+          windows: ["Zkontrolujte ikonu štítu v liště (Zabezpečení Windows).", "Musí svítit zeleně.", "Nepoužívejte dva antiviry najednou!"],
+          macos: ["macOS má integrovanou ochranu XProtect.", "Pro vyšší ochranu nainstalujte např. Malwarebytes (stačí Free verze na občasný sken)."]
+        },
+        aiPrompt: "Stačí mi integrovaný Windows Defender nebo potřebuji placený antivirus?"
+      },
+      {
+        id: "pc_encryption",
+        label: "Šifrování disku",
+        shortDesc: "Ochrana dat při fyzické krádeži.",
+        significance: "Šifrování zamkne obsah disku tak, že je čitelný pouze s vaším heslem. Bez něj jsou data jen shluk náhodných znaků.",
+        risk: "Při krádeži notebooku zloděj vyndá disk, připojí ho jinam a přečte všechna data, pokud nejsou šifrovaná.",
+        instructions: {
+          windows: ["Start -> 'BitLocker' -> Spravovat nástroj BitLocker -> Zapnout.", "Uložte si obnovovací klíč mimo PC!"],
+          macos: ["Nastavení -> Soukromí a zabezpečení -> FileVault -> Zapnout.", "Klíč si opište nebo uložte na iCloud."]
+        },
+        aiPrompt: "Co dělat, když zapomenu heslo k BitLockeru?"
+      }
     ]
   },
   {
-    title: "Sekce 2: Telefon (Android/iPhone)",
-    description: "Váš mobilní telefon obsahuje více soukromí než vaše peněženka.",
+    id: "mobile",
+    title: "Telefon",
+    description: "Váš telefon o vás ví vše. Chraňte ho.",
+    icon: Smartphone,
+    platformType: 'mobile',
     items: [
-      { id: "mob_biometrics", label: "Biometrická ochrana (otisk/obličej)", why: "Nejrychlejší a nejbezpečnější ochrana vstupu.", risk: "PIN lze snadno odkoukat zpoza ramene.", aiPrompt: "Proč používat biometrii?" },
-      { id: "mob_findmy", label: "Aktivní služba 'Najít zařízení'", why: "Umožňuje vzdálené smazání dat při ztrátě.", risk: "Zloděj získá přístup k vašemu cloudu a bankovnictví.", aiPrompt: "Jak funguje Najít telefon?" },
-      { id: "mob_permissions", label: "Kontrola oprávnění aplikací", why: "Zabraňuje aplikacím v odposlechu nebo sledování.", risk: "Aplikace mohou tajně nahrávat zvuk nebo polohu.", aiPrompt: "Jak kontrolovat oprávnění aplikací?" }
+      {
+        id: "mob_biometrics",
+        label: "Biometrický zámek",
+        shortDesc: "TouchID / FaceID místo PINu.",
+        significance: "Biometrie je bezpečnější než gesto (lze odkoukat) a rychlejší než PIN. Je klíčem k bankovním aplikacím.",
+        risk: "Bez zámku má nálezce telefonu přístup k vašemu e-mailu (a tím pádem ke všem obnovám hesel) i SMS kódům.",
+        instructions: {
+          ios: ["Nastavení -> Face ID a kód.", "Nastavte také 'Vyžadovat pozornost pro Face ID'."],
+          android: ["Nastavení -> Zabezpečení a soukromí -> Zámek zařízení.", "Používejte Otisk prstu + silný PIN (ne gesto)."]
+        },
+        aiPrompt: "Je bezpečnější FaceID nebo otisk prstu?"
+      },
+      {
+        id: "mob_findmy",
+        label: "Služba 'Najít'",
+        shortDesc: "Lokalizace a smazání na dálku.",
+        significance: "Poslední záchrana. Umožňuje vidět polohu, přehrát zvuk nebo telefon na dálku vymazat (tovární nastavení).",
+        risk: "Bez této služby je ztracený telefon nenávratně pryč a data v něm jsou v ohrožení.",
+        instructions: {
+          ios: ["Nastavení -> [Vaše jméno] -> Najít -> Najít iPhone -> Zapnout."],
+          android: ["Nastavení -> Google -> Najít moje zařízení -> Zapnout.", "Povolte 'Ukládat poslední polohu'."]
+        },
+        aiPrompt: "Funguje služba Najít i když je telefon vybitý?"
+      },
+      {
+        id: "mob_permissions",
+        label: "Oprávnění aplikací",
+        shortDesc: "Kontrola kamery a polohy.",
+        significance: "Aplikace 'Baterka' nepotřebuje vaši polohu. Omezením oprávnění chráníte soukromí před sběrem dat.",
+        risk: "Škodlivé aplikace mohou na pozadí nahrávat zvuk nebo číst potvrzovací SMS z banky.",
+        instructions: {
+          ios: ["Nastavení -> Soukromí a zabezpečení -> Kontrola bezpečnosti.", "Projděte přístup k Fotkám a Poloze."],
+          android: ["Nastavení -> Soukromí -> Správce oprávnění.", "Odeberte nepoužívaná oprávnění (Odebrat, pokud se nepoužívá)."]
+        },
+        aiPrompt: "Jak poznám, že mě nějaká aplikace sleduje?"
+      }
     ]
   },
   {
-    title: "Sekce 3: Domácí síť a Wi-Fi",
-    description: "Router je brána do vašeho domova. Špatné nastavení ohrožuje všechna zařízení.",
+    id: "net",
+    title: "Síť a Router",
+    description: "Vstupní brána do digitální domácnosti.",
+    icon: Wifi,
     items: [
-      { id: "net_password", label: "Změna výchozího hesla routeru", why: "Zabrání útočníkům ovládnout vaši síť zvenčí.", risk: "Výchozí hesla jsou veřejně známá hackerům.", aiPrompt: "Jak změnit heslo k routeru?" },
-      { id: "net_wifi_pass", label: "Silné heslo k Wi-Fi (16+ znaků)", why: "Dlouhé heslo je odolné proti útokům hrubou silou.", risk: "Slabé heslo umožní sousedům sledovat váš provoz.", aiPrompt: "Tipy na silné WiFi heslo." },
-      { id: "net_wps", label: "Vypnuté WPS", why: "Protokol WPS obsahuje kritickou chybu v návrhu.", risk: "WiFi heslo lze prolomit během pár hodin přes WPS.", aiPrompt: "Proč vypnout WPS?" },
-      { id: "net_firmware", label: "Aktuální firmware routeru", why: "Výrobci vydávají opravy pro aktivní útoky.", risk: "Zastaralý router slouží jako trvalý odposlech.", aiPrompt: "Jak aktualizovat router?" },
-      { id: "net_guest", label: "Síť pro hosty (Guest Network)", why: "Odděluje návštěvy od vašich soukromých dat.", risk: "Infikovaný mobil návštěvy může napadnout vaše PC.", aiPrompt: "Výhody Guest sítě." }
+      {
+        id: "net_admin",
+        label: "Heslo administrace",
+        shortDesc: "Změna defaultního admin hesla.",
+        significance: "Routery mají často z výroby heslo 'admin'. Hackeři to ví a zkouší to jako první.",
+        risk: "Útočník s přístupem do routeru může změnit DNS a přesměrovat vás na falešné bankovnictví.",
+        instructions: {
+          general: ["Otočte router a najděte štítek s IP adresou (např. 192.168.0.1).", "Zadejte IP do prohlížeče.", "Přihlašte se a v sekci 'System'/'Admin' změňte heslo."]
+        },
+        aiPrompt: "Jak zjistím IP adresu svého routeru?"
+      },
+      {
+        id: "net_wifi",
+        label: "Silné WPA3 heslo",
+        shortDesc: "Heslo k samotné Wi-Fi síti.",
+        significance: "Vaše Wi-Fi přesahuje zdi bytu. Silné šifrování brání sousedům v odposlechu.",
+        risk: "Slabé heslo lze prolomit za pár minut. Cizí člověk pak může přes vaši IP adresu páchat trestnou činnost.",
+        instructions: {
+          general: ["V nastavení routeru hledejte 'Wireless' / 'Wi-Fi'.", "Security/Mode: WPA2-Personal (AES) nebo WPA3.", "Heslo: Minimálně 12 znaků (ideálně celá věta)."]
+        },
+        aiPrompt: "Jak vytvořit heslo, které si zapamatuji, ale je bezpečné?"
+      }
     ]
   },
   {
-    title: "Sekce 4: Zálohování a obnova",
-    description: "Záloha je jedinou 100% jistotou proti ztrátě dat.",
+    id: "backup",
+    title: "Zálohování",
+    description: "Jediná 100% ochrana proti ztrátě dat.",
+    icon: HardDrive,
     items: [
-      { id: "back_local", label: "Lokální záloha na externím disku", why: "Rychlá obnova a fyzická kontrola nad daty.", risk: "Při havárii PC přijdete o vše bez zálohy.", aiPrompt: "Jak zálohovat na disk?" },
-      { id: "back_cloud", label: "Cloudová záloha (OneDrive/iCloud)", why: "Ochrana dat i při požáru nebo krádeži domova.", risk: "Fyzické disky mohou selhat všechny najednou.", aiPrompt: "Který cloud je nejlepší?" },
-      { id: "back_auto", label: "Automatizace záloh", why: "Běží bez vašeho zásahu. Lidé zapomínají.", risk: "Stará záloha je při útoku k ničemu.", aiPrompt: "Jak automatizovat zálohy?" },
-      { id: "back_test", label: "Test obnovy ze zálohy", why: "Ověření, že data jdou skutečně přečíst.", risk: "Poškozená záloha vyjde najevo, až když je pozdě.", aiPrompt: "Jak otestovat obnovu dat?" }
+      {
+        id: "back_321",
+        label: "Pravidlo 3-2-1",
+        shortDesc: "3 kopie, 2 média, 1 mimo domov.",
+        significance: "Statistika je neúprosná. Disky selhávají. Pravidlo 3-2-1 snižuje riziko ztráty na nulu.",
+        risk: "Ransomware. Krádež. Požár. Pokud máte data jen v PC, přijdete o ně.",
+        instructions: {
+          general: ["Kopie 1: Váš počítač.", "Kopie 2: Externí disk (odpojovat po záloze!).", "Kopie 3: Cloud (OneDrive, Google Drive, iCloud)."]
+        },
+        aiPrompt: "Jaký je nejlepší cloud pro zálohování fotek?"
+      },
+      {
+        id: "back_bitlocker",
+        label: "Recovery kódy",
+        shortDesc: "Záloha 2FA a šifrovacích klíčů.",
+        significance: "Když ztratíte mobil s 2FA aplikací, 'Recovery Codes' jsou jediná cesta zpět.",
+        risk: "Trvalá ztráta přístupu k Instagramu, Googlu či bance. Podpora často bez kódů nepomůže.",
+        instructions: {
+          general: ["Vytiskněte si záložní kódy ke všem účtům (Google, FB...).", "Uložte je do fyzického trezoru nebo šanonu.", "Nikdy je nefoťte do mobilu!"]
+        },
+        aiPrompt: "Kam bezpečně uložit papírové zálohy hesel?"
+      }
     ]
   }
 ];
@@ -72,12 +205,19 @@ const AUDIT_DATA: AuditSection[] = [
 const AuditScreen: React.FC<Props> = ({ onBack }) => {
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+
+  // Platform selection state
+  const [desktopOS, setDesktopOS] = useState<'Windows' | 'macOS'>('Windows');
+  const [mobileOS, setMobileOS] = useState<'Android' | 'iOS'>('Android');
+
   const [showChat, setShowChat] = useState(false);
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeItem, setActiveItem] = useState<AuditItem | null>(null);
   const [inputMessage, setInputMessage] = useState("");
   const [needsKey, setNeedsKey] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const totalItemsCount = AUDIT_DATA.reduce((acc, section) => acc + section.items.length, 0);
@@ -93,11 +233,7 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
       // @ts-ignore
       await window.aistudio.openSelectKey();
       setNeedsKey(false);
-      if (activeItem) {
-        // Retry the call
-        const dummyEvent = { stopPropagation: () => {} } as React.MouseEvent;
-        startAiConsultant(activeItem, dummyEvent);
-      }
+      // Restart chat after key is set? Maybe just let user try again.
     } catch (err) {
       console.error("Failed to open key dialog:", err);
     }
@@ -112,201 +248,451 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
     e.stopPropagation();
     setActiveItem(item);
     setShowChat(true);
-    setChatHistory([]);
+    setChatHistory([]); // Start with empty history to show intro
     setNeedsKey(false);
+    setSelectedImage(null);
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearImage = () => {
+    setSelectedImage(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if ((!inputMessage.trim() && !selectedImage) || loading || !activeItem) return;
 
     if (!process.env.API_KEY) {
       setNeedsKey(true);
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-preview',
-        contents: [{ role: 'user', parts: [{ text: item.aiPrompt }] }],
-        config: { 
-          systemInstruction: `Jsi Kyber-GURU, špičkový expert na IT bezpečnost. Pomoz uživateli s tématem: ${item.label}. Riziko: ${item.risk}.` 
-        }
-      });
-
-      if (response.text) {
-        setChatHistory([{ role: 'model', text: response.text }]);
-      }
-    } catch (err: any) {
-      console.error("AI Consultant Error:", err);
-      const msg = err.message || "";
-      if (msg.includes("API Key") || msg.includes("not set")) {
-        setNeedsKey(true);
-      } else {
-        setChatHistory([{ role: 'model', text: "Omlouvám se, ale nepodařilo se mi navázat spojení. Zkontrolujte prosím svůj API klíč." }]);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputMessage.trim() || loading || !activeItem || !process.env.API_KEY) return;
-
     const userText = inputMessage;
-    const newHistory: Message[] = [...chatHistory, { role: 'user', text: userText }];
+    // Determine context based on active item's section
+    let platformContext = "";
+    const parentSection = AUDIT_DATA.find(s => s.items.find(i => i.id === activeItem.id));
+    if (parentSection?.platformType === 'desktop') {
+      platformContext = `Uživatel má ${desktopOS}.`;
+    } else if (parentSection?.platformType === 'mobile') {
+      platformContext = `Uživatel má ${mobileOS}.`;
+    }
+
+    const newHistory: Message[] = [...chatHistory, {
+      role: 'user',
+      text: userText + (selectedImage ? " [Obrázek přiložen]" : "")
+    }];
     setChatHistory(newHistory);
     setInputMessage("");
     setLoading(true);
 
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+      let parts: any[] = [{ text: userText }];
+
+      if (selectedImage) {
+        // Extract base64 functionality
+        const base64Data = selectedImage.split(',')[1];
+        const mimeType = selectedImage.split(';')[0].split(':')[1];
+        parts.push({
+          inlineData: {
+            data: base64Data,
+            mimeType: mimeType
+          }
+        });
+      }
+
+      // Add image to the last message if needed
+      const requestContents = newHistory.slice(0, -1).map(m => ({ role: m.role, parts: [{ text: m.text }] }));
+      requestContents.push({ role: 'user', parts: parts });
+
       const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-preview',
-        contents: newHistory.map(m => ({ role: m.role, parts: [{ text: m.text }] })),
+        model: 'gemini-2.0-flash',
+        contents: requestContents,
+        config: {
+          systemInstruction: `Jsi Kyber-GURU, empatický a trpělivý bezpečnostní expert. 
+            Tvým úkolem je provést uživatele nastavením: "${activeItem.label}".
+            
+            Kontext uživatele: ${platformContext}
+            Důvod auditu: Minimalizace rizika: ${activeItem.risk}.
+
+            INSTRUKCE:
+            1. Buď stručný. Odpovídej v krátkých krocích.
+            2. Pokud se uživatel ptá na postup, naváděj ho přesně podle jeho systému (${platformContext}).
+            3. Nepoužívej složité technické termíny bez vysvětlení.
+            4. Tvá první otázka by měla ověřit, v jakém stavu se uživatel nachází (např. "Vidíš v nastavení tuto možnost?").
+            5. Pokud uživatel pošle obrázek (screenshot), analyzuj ho a poraď, co vidí nebo kam má kliknout.`
+        }
       });
+
+      setSelectedImage(null); // Clear image after sending
       if (response.text) {
         setChatHistory(prev => [...prev, { role: 'model', text: response.text! }]);
       }
-    } catch (e) {
-      setChatHistory(prev => [...prev, { role: 'model', text: "Došlo k chybě při generování odpovědi." }]);
+    } catch (e: any) {
+      // console.error(e);
+      if (e.message?.includes("API Key")) setNeedsKey(true);
+      else setChatHistory(prev => [...prev, { role: 'model', text: "Omlouvám se, došlo k chybě spojení." }]);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="max-w-5xl mx-auto px-4 py-8 min-h-screen pb-32">
-      <div className="sticky top-0 z-40 bg-[#050505]/95 backdrop-blur-xl -mx-4 px-4 pt-4 pb-8 mb-8 border-b border-white/5 animate-fade-in-up">
-        <button onClick={onBack} className="text-gray-500 hover:text-white transition-all flex items-center gap-2 text-xs font-bold tracking-widest uppercase mb-6 font-mono group">
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Zpět do menu
-        </button>
+  const handleQuickQuestion = (text: string) => {
+    setInputMessage(text);
+    // Automatically submit? Or just fill input? Let's auto-submit for smoother UX
+    // We need to simulate the event or call a separate submit function
+    // For simplicity, just setting input and user has to click send is safer, 
+    // but auto-submit is "magical". Let's try to call the logic directly.
 
-        <div className="bg-[#0f0f0f] border border-white/10 p-6 md:p-8 rounded-[2rem] flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 opacity-30"></div>
-          <div className="text-center md:text-left">
-            <h1 className="text-3xl md:text-5xl font-display text-white mb-2 uppercase tracking-tighter">
-              Audit <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-600">Zabezpečení</span>
-            </h1>
-            <p className="text-gray-500 text-[10px] font-mono uppercase tracking-[0.2em]">Bezpečný občan 1.0 • Interaktivní modul</p>
+    // Actually, React state updates are async, so we can't just setInput and call handleSendMessage immediately.
+    // We'll just define a separate logic function or use a timeout hack (not recommended).
+    // Best way: call the core logic with the text directly.
+
+    submitMessage(text);
+  };
+
+  const submitMessage = async (text: string) => {
+    if (!activeItem || loading) return;
+    if (!process.env.API_KEY) {
+      setNeedsKey(true);
+      return;
+    }
+
+    // Determine context based on active item's section
+    let platformContext = "";
+    const parentSection = AUDIT_DATA.find(s => s.items.find(i => i.id === activeItem.id));
+    if (parentSection?.platformType === 'desktop') {
+      platformContext = `Uživatel má ${desktopOS}.`;
+    } else if (parentSection?.platformType === 'mobile') {
+      platformContext = `Uživatel má ${mobileOS}.`;
+    }
+
+    const newHistory: Message[] = [...chatHistory, { role: 'user', text: text }];
+    setChatHistory(newHistory);
+    setLoading(true);
+
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: newHistory.map(m => ({ role: m.role, parts: [{ text: m.text }] })),
+        config: {
+          systemInstruction: `Jsi Kyber-GURU, expert na bezpečnost. Téma: ${activeItem.label}.
+              Kontext: ${platformContext}.
+              Veď uživatele KROK ZA KROKEM. Buď maximálně stručný (max 2-3 věty na odpověď).`
+        }
+      });
+      if (response.text) {
+        setChatHistory(prev => [...prev, { role: 'model', text: response.text! }]);
+      }
+    } catch (e: any) {
+      if (e.message?.includes("API Key")) setNeedsKey(true);
+      else setChatHistory(prev => [...prev, { role: 'model', text: "Chyba spojení." }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8 pb-32">
+      {/* HEADER & EXPLANATION */}
+      <div className="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-8 mb-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 animate-fade-in-up">
+        <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500"></div>
+
+        <div className="flex-1">
+          <h1 className="text-2xl font-display text-white uppercase tracking-tight mb-3 flex items-center gap-3">
+            <ShieldCheck className="w-6 h-6 text-emerald-500" /> Bezpečnostní Audit
+          </h1>
+          <div className="space-y-2 text-base text-gray-400 font-light leading-relaxed">
+            <p>
+              <strong className="text-white">Co to je?</strong> Interaktivní kontrolní seznam (checklist) pro zabezpečení vašich zařízení.
+              Projděte bod po bodu a označte ty, které máte splněné.
+            </p>
+            <p>
+              <strong className="text-white">Proč?</strong> Kybernetická bezpečnost není jednorázová akce, ale proces.
+              Tento audit vám pomůže nezapomenout na kritická nastavení, která hackeři zneužívají nejčastěji.
+            </p>
           </div>
-          <div className="bg-black/40 border border-white/10 p-5 rounded-3xl text-center min-w-[160px] backdrop-blur-md shadow-inner">
-            <div className={`text-4xl md:text-5xl font-bold font-mono tracking-tighter transition-colors ${percentage === 100 ? 'text-emerald-400' : 'text-white'}`}>{percentage}%</div>
-            <div className="text-[10px] text-gray-500 font-mono uppercase tracking-widest mb-3">Dokončeno</div>
-            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-               <div className={`h-full transition-all duration-1000 ${percentage === 100 ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-pink-600'}`} style={{ width: `${percentage}%` }}></div>
-            </div>
+        </div>
+
+        <div className="bg-black/40 border border-white/10 p-5 rounded-2xl text-center min-w-[150px]">
+          <div className={`text-5xl font-bold font-mono tracking-tighter transition-colors mb-1 ${percentage === 100 ? 'text-emerald-400' : 'text-white'}`}>{percentage}%</div>
+          <div className="text-xs text-gray-500 font-mono uppercase tracking-widest mb-2">Úroveň ochrany</div>
+          <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div className={`h-full transition-all duration-1000 ${percentage === 100 ? 'bg-emerald-500' : 'bg-gradient-to-r from-pink-600 to-rose-600'}`} style={{ width: `${percentage}%` }}></div>
           </div>
         </div>
       </div>
 
       <div className="space-y-12">
-        {AUDIT_DATA.map((section, sIdx) => (
-          <div key={sIdx} className="animate-fade-in-up" style={{ animationDelay: `${sIdx * 100}ms` }}>
-            <div className="mb-6 flex items-center gap-4">
-               <div className="w-1 h-8 bg-pink-500 rounded-full"></div>
-               <div>
+        {AUDIT_DATA.map((section) => (
+          <div key={section.id} className="animate-fade-in-up">
+            {/* SECTION HEADER */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-white/5 pb-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-black border border-white/10 flex items-center justify-center text-pink-500 shadow-lg">
+                  <section.icon className="w-6 h-6" />
+                </div>
+                <div>
                   <h2 className="text-xl font-display text-white uppercase tracking-wider">{section.title}</h2>
-                  <p className="text-gray-500 text-[10px] uppercase font-mono tracking-widest">{section.description}</p>
-               </div>
+                  <p className="text-sm text-gray-500 font-mono uppercase tracking-widest">{section.description}</p>
+                </div>
+              </div>
+
+              {/* PLATFORM TOGGLES */}
+              {section.platformType === 'desktop' && (
+                <div className="flex bg-black/40 p-1 rounded-lg border border-white/10">
+                  <button onClick={() => setDesktopOS('Windows')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${desktopOS === 'Windows' ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}>Windows</button>
+                  <button onClick={() => setDesktopOS('macOS')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${desktopOS === 'macOS' ? 'bg-gray-200 text-black shadow-lg' : 'text-gray-500 hover:text-white'}`}>macOS</button>
+                </div>
+              )}
+              {section.platformType === 'mobile' && (
+                <div className="flex bg-black/40 p-1 rounded-lg border border-white/10">
+                  <button onClick={() => setMobileOS('Android')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${mobileOS === 'Android' ? 'bg-emerald-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}>Android</button>
+                  <button onClick={() => setMobileOS('iOS')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${mobileOS === 'iOS' ? 'bg-white text-black shadow-lg' : 'text-gray-500 hover:text-white'}`}>iPhone</button>
+                </div>
+              )}
             </div>
 
+            {/* AUDIT ITEMS GRID */}
             <div className="grid gap-3">
-              {section.items.map((item) => (
-                <div 
-                  key={item.id} 
-                  onClick={() => setExpandedItems(prev => ({ ...prev, [item.id]: !prev[item.id] }))}
-                  className={`group border rounded-2xl cursor-pointer transition-all duration-300 ${expandedItems[item.id] ? 'bg-[#1a1a1a] border-pink-500/40 shadow-xl' : 'bg-[#0a0a0a]/60 border-white/5 hover:border-white/20'}`}
-                >
-                  <div className="p-4 md:p-6 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 flex-grow">
-                      <button 
-                        onClick={(e) => toggleCheck(item.id, e)}
-                        className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all border ${checkedItems[item.id] ? 'bg-emerald-500 border-emerald-500 shadow-lg shadow-emerald-500/20' : 'bg-white/5 border-white/10 group-hover:border-pink-500/30'}`}
-                      >
-                        {checkedItems[item.id] && <Check className="w-4 h-4 text-white" />}
-                      </button>
-                      <h3 className={`text-sm md:text-base font-bold transition-all ${checkedItems[item.id] ? 'text-gray-600 line-through opacity-50' : 'text-white'}`}>
-                        {item.label}
-                      </h3>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <button 
-                          onClick={(e) => startAiConsultant(item, e)}
-                          className="flex items-center gap-2 px-3 py-2 bg-pink-500/10 hover:bg-pink-500 text-pink-500 hover:text-white border border-pink-500/20 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
-                        >
-                          <Bot className="w-3 h-3" /> <span className="hidden sm:inline">AI Poradce</span>
-                        </button>
-                        {expandedItems[item.id] ? <ChevronUp className="w-4 h-4 text-gray-600" /> : <ChevronDown className="w-4 h-4 text-gray-600" />}
-                    </div>
-                  </div>
+              {section.items.map((item) => {
+                const isExpanded = expandedItems[item.id];
+                const isChecked = checkedItems[item.id];
 
-                  {expandedItems[item.id] && (
-                    <div className="px-6 pb-6 pt-2 animate-fade-in-up border-t border-white/5 bg-black/20">
-                      <div className="grid md:grid-cols-2 gap-4 mt-4">
-                        <div className="p-4 bg-emerald-500/5 rounded-xl border border-emerald-500/10">
-                          <div className="flex items-center gap-2 text-emerald-400 text-[9px] font-bold uppercase mb-2 font-mono"><ShieldCheck className="w-3 h-3" /> Význam</div>
-                          <p className="text-gray-400 text-xs leading-relaxed">{item.why}</p>
+                // Resolve instructions
+                let currentInstructions = item.instructions.general;
+                if (section.platformType === 'desktop') {
+                  currentInstructions = desktopOS === 'Windows' ? item.instructions.windows : item.instructions.macos;
+                } else if (section.platformType === 'mobile') {
+                  currentInstructions = mobileOS === 'Android' ? item.instructions.android : item.instructions.ios;
+                }
+
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setExpandedItems(prev => ({ ...prev, [item.id]: !prev[item.id] }))}
+                    className={`group border rounded-2xl transition-all duration-300 overflow-hidden relative ${isExpanded ? 'bg-[#151515] border-pink-500/20 shadow-xl' : 'bg-[#0a0a0a]/40 border-white/5 hover:bg-[#111] hover:border-white/10'}`}
+                  >
+                    {/* Collapsed Header */}
+                    <div className="p-4 flex items-center gap-4 relative z-10">
+                      <button
+                        onClick={(e) => toggleCheck(item.id, e)}
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 border flex-shrink-0 ${isChecked ? 'bg-emerald-500 border-emerald-500 shadow-md scale-105' : 'bg-transparent border-white/10 group-hover:border-pink-500/30'}`}
+                      >
+                        {isChecked && <Check className="w-5 h-5 text-white stroke-[3]" />}
+                      </button>
+
+                      <div className="flex-grow min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <h3 className={`text-lg font-bold transition-all truncate ${isChecked ? 'text-gray-500 line-through' : 'text-white'}`}>
+                            {item.label}
+                          </h3>
                         </div>
-                        <div className="p-4 bg-rose-500/5 rounded-xl border border-rose-500/10">
-                          <div className="flex items-center gap-2 text-rose-400 text-[9px] font-bold uppercase mb-2 font-mono"><AlertTriangle className="w-3 h-3" /> Riziko</div>
-                          <p className="text-gray-400 text-xs leading-relaxed">{item.risk}</p>
-                        </div>
+                        <p className={`text-sm text-gray-400 transition-opacity truncate ${isExpanded ? 'opacity-0 h-0 hidden' : 'opacity-100'}`}>
+                          {item.shortDesc}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {/* Desktop Consultant Button */}
+                        <button
+                          onClick={(e) => startAiConsultant(item, e)}
+                          className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all border ${isExpanded ? 'bg-pink-600/10 text-pink-400 border-pink-500/20' : 'bg-transparent text-gray-600 border-transparent hover:bg-white/5 hover:text-gray-300'}`}
+                        >
+                          <Bot className="w-3 h-3" /> Konzultace
+                        </button>
+                        <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
                       </div>
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    {/* Expanded Body */}
+                    {isExpanded && (
+                      <div className="px-4 pb-6 pt-0 border-t border-white/5 bg-[#0e0e0e] animate-fade-in-up">
+                        <div className="grid md:grid-cols-2 gap-4 mt-6">
+
+                          {/* Info Column */}
+                          <div className="space-y-4">
+                            <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-4">
+                              <h4 className="flex items-center gap-2 text-emerald-500 text-sm font-bold uppercase tracking-widest mb-2">
+                                <Info className="w-4 h-4" /> Význam
+                              </h4>
+                              <p className="text-gray-300 text-sm leading-relaxed">{item.significance}</p>
+                            </div>
+                            <div className="bg-rose-500/5 border border-rose-500/10 rounded-xl p-4">
+                              <h4 className="flex items-center gap-2 text-rose-500 text-sm font-bold uppercase tracking-widest mb-2">
+                                <AlertTriangle className="w-4 h-4" /> Riziko
+                              </h4>
+                              <p className="text-gray-300 text-sm leading-relaxed">{item.risk}</p>
+                            </div>
+                          </div>
+
+                          {/* How-To Column */}
+                          <div className="bg-[#050505] rounded-xl border border-white/10 p-5 relative">
+                            {/* Small Badge for Current OS */}
+                            <div className="absolute top-3 right-3 text-xs uppercase font-bold text-gray-600 border border-white/5 px-2 py-0.5 rounded bg-white/5">
+                              {section.platformType === 'desktop' ? desktopOS : section.platformType === 'mobile' ? mobileOS : 'General'}
+                            </div>
+
+                            <h4 className="flex items-center gap-2 text-white text-sm font-bold uppercase tracking-widest mb-4 border-b border-white/10 pb-2">
+                              <Settings className="w-4 h-4 text-pink-500" /> Jak nastavit
+                            </h4>
+                            <div className="space-y-3">
+                              {currentInstructions?.map((step, i) => (
+                                <div key={i} className="flex gap-3 items-start">
+                                  <span className="text-pink-500 font-mono text-sm font-bold mt-0.5">{i + 1}.</span>
+                                  <p className="text-gray-400 text-sm leading-relaxed">{step}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Mobile Consultant Button */}
+                        <button
+                          onClick={(e) => startAiConsultant(item, e)}
+                          className="w-full mt-4 md:hidden flex items-center justify-center gap-2 px-4 py-3 bg-pink-600/10 text-pink-400 border border-pink-500/20 rounded-xl text-xs font-bold uppercase tracking-widest"
+                        >
+                          <Bot className="w-3 h-3" /> Zeptat se AI
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         ))}
       </div>
 
+      {/* AI CHAT MODAL refined */}
       {showChat && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-6">
-          <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" onClick={() => setShowChat(false)}></div>
-          <div className="relative w-full max-w-2xl h-full md:h-[85vh] bg-[#0d0d0d] border border-white/10 md:rounded-[3rem] shadow-2xl flex flex-col overflow-hidden animate-fade-in-up">
-             <div className="p-6 border-b border-white/5 flex items-center justify-between bg-[#111]">
-                <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center"><Bot className="w-7 h-7 text-white" /></div>
-                   <div><h3 className="text-xs font-bold text-white uppercase tracking-widest font-display">AI Konzultant</h3><p className="text-[10px] text-pink-500 font-mono truncate max-w-[200px]">{activeItem?.label}</p></div>
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick={() => setShowChat(false)}></div>
+          <div className="relative w-full max-w-2xl h-full md:h-[80vh] bg-[#111] border border-white/10 md:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-fade-in-up">
+            <div className="p-4 border-b border-white/5 flex items-center justify-between bg-[#0a0a0a]">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-pink-600/20 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-pink-500" />
                 </div>
-                <button onClick={() => setShowChat(false)} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-500 hover:text-white transition-all"><X className="w-5 h-5" /></button>
-             </div>
-             
-             <div className="flex-grow overflow-y-auto p-6 space-y-6">
-                {needsKey ? (
-                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-3xl p-8 text-center animate-fade-in-up">
-                     <Key className="w-10 h-10 text-amber-500 mx-auto mb-4" />
-                     <h3 className="text-white font-bold mb-2">Chybí API klíč</h3>
-                     <p className="text-gray-500 text-xs mb-6">AI konzultant vyžaduje platný API klíč s aktivním Billingem.</p>
-                     <button onClick={handleOpenKeyDialog} className="bg-white text-black px-6 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-amber-50 transition-all flex items-center gap-2 mx-auto">Vybrat klíč <ArrowRight className="w-3 h-3" /></button>
+                <div>
+                  <h3 className="text-sm font-bold text-white uppercase tracking-widest">AI Konzultant</h3>
+                  <p className="text-xs text-gray-500 truncate max-w-[150px]">{activeItem?.label}</p>
+                </div>
+              </div>
+              <button onClick={() => setShowChat(false)} className="text-gray-500 hover:text-white bg-white/5 p-2 rounded-full hover:bg-rose-500 transition-colors"><X className="w-4 h-4" /></button>
+            </div>
+
+            <div className="flex-grow overflow-y-auto p-6 space-y-6 bg-[#0e0e0e]">
+              {/* Intro Screen if history is empty */}
+              {chatHistory.length === 0 && !loading && !needsKey && (
+                <div className="flex flex-col items-center justify-center h-full text-center p-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-pink-500/20">
+                    <Bot className="w-8 h-8 text-white" />
                   </div>
-                ) : (
-                  <>
-                    {chatHistory.map((msg, idx) => (
-                      <div key={idx} className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                        <div className={`w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center mt-1 border ${msg.role === 'model' ? 'bg-pink-500/10 text-pink-500 border-pink-500/20' : 'bg-white/5 text-gray-500 border-white/10'}`}>
-                          {msg.role === 'model' ? <Bot className="w-4 h-4" /> : <div className="w-1 h-1 bg-white rounded-full"></div>}
-                        </div>
-                        <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role === 'model' ? 'bg-[#181818] text-gray-200 border border-white/5' : 'bg-pink-600 text-white shadow-lg'}`}>
-                          <div dangerouslySetInnerHTML={{ __html: msg.text.replace(/\n/g, '<br/>') }}></div>
-                        </div>
-                      </div>
-                    ))}
-                    {loading && <div className="flex gap-4 animate-pulse"><div className="w-8 h-8 rounded-lg bg-pink-500/10 border border-pink-500/20" /><div className="bg-[#181818] rounded-2xl px-6 py-4 w-32" /></div>}
-                  </>
+                  <h3 className="text-lg font-bold text-white mb-2">Potřebujete pomoci s nastavením?</h3>
+                  <p className="text-gray-400 text-sm max-w-sm mb-8 leading-relaxed">
+                    Jsem váš AI bezpečnostní asistent. Mohu vás provést nastavením
+                    bodu <strong>"{activeItem?.label}"</strong> krok za krokem, přímo pro vaše zařízení.
+                  </p>
+
+                  <div className="w-full max-w-xs space-y-3">
+                    <button
+                      onClick={() => submitMessage(`Jak nastavit ${activeItem?.label} na mém zařízení?`)}
+                      className="w-full py-3 px-4 bg-[#1a1a1a] border border-white/10 hover:border-pink-500/50 hover:bg-[#222] rounded-xl text-sm text-gray-300 hover:text-white transition-all text-left flex items-center justify-between group"
+                    >
+                      <span>🚀 Jak to mám nastavit?</span>
+                      <ArrowRight className="w-3 h-3 text-pink-500 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    <button
+                      onClick={() => submitMessage(activeItem?.aiPrompt || "Mám dotaz.")}
+                      className="w-full py-3 px-4 bg-[#1a1a1a] border border-white/10 hover:border-pink-500/50 hover:bg-[#222] rounded-xl text-sm text-gray-300 hover:text-white transition-all text-left flex items-center justify-between group"
+                    >
+                      <span>💡 {activeItem?.aiPrompt}</span>
+                      <ArrowRight className="w-3 h-3 text-pink-500 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {!needsKey ? chatHistory.map((msg, idx) => (
+                <div key={idx} className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''} animate-fade-in`}>
+                  <div className={`p-4 rounded-2xl text-sm leading-relaxed max-w-[85%] shadow-md ${msg.role === 'model' ? 'bg-[#1a1a1a] text-gray-300 border border-white/5' : 'bg-pink-600 text-white'}`}>
+                    <div dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }}></div>
+                  </div>
+                </div>
+              )) : (
+                <div className="text-center p-10 flex flex-col items-center justify-center h-full">
+                  <Key className="w-12 h-12 text-amber-500 mb-4" />
+                  <h3 className="text-white font-bold text-sm mb-2">Vyžadován API klíč</h3>
+                  <p className="text-gray-500 text-xs mb-6 max-w-[200px]">Pro využití AI asistenta je potřeba propojit aplikaci.</p>
+                  <button onClick={handleOpenKeyDialog} className="bg-white text-black px-6 py-2 rounded-xl text-xs font-bold uppercase hover:bg-amber-100 shadow-lg">Připojit klíč</button>
+                </div>
+              )}
+              {loading && (
+                <div className="flex justify-start">
+                  <div className="bg-[#1a1a1a] border border-white/5 px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 text-pink-500 animate-spin" />
+                    <span className="text-xs text-gray-500">Analyzuji váš dotaz...</span>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+            {!needsKey && (
+              <div className="p-4 bg-[#0a0a0a] border-t border-white/5">
+                {selectedImage && (
+                  <div className="mb-3 flex items-center gap-2 bg-[#1a1a1a] p-2 rounded-lg w-fit border border-white/10 animate-fade-in-up">
+                    <img src={selectedImage} alt="Preview" className="h-12 w-auto rounded-md object-cover border border-white/5" />
+                    <button onClick={clearImage} className="p-1 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white">
+                      <X className="w-3 h-3" />
+                    </button>
+                    <span className="text-xs text-gray-500 pr-2">Snímek obrazovky</span>
+                  </div>
                 )}
-                <div ref={chatEndRef} />
-             </div>
-             
-             {!needsKey && (
-               <div className="p-6 bg-[#111] border-t border-white/5">
-                  <form onSubmit={handleSendMessage} className="flex gap-3">
-                    <input value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} placeholder="Zeptejte se na detaily..." className="flex-grow bg-[#050505] border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-pink-500/50 transition-all font-light" />
-                    <button type="submit" disabled={loading || !inputMessage.trim()} className="w-14 h-14 bg-pink-600 text-white rounded-2xl hover:bg-pink-500 disabled:opacity-30 transition-all flex items-center justify-center shadow-lg"><Send className="w-5 h-5" /></button>
-                  </form>
-               </div>
-             )}
+                <form onSubmit={handleSendMessage} className="relative flex gap-2">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageSelect}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-3 bg-[#151515] border border-white/10 rounded-xl text-gray-400 hover:text-white hover:bg-[#222] transition-colors"
+                    title="Nahrát obrázek"
+                  >
+                    <Paperclip className="w-5 h-5" />
+                  </button>
+                  <div className="relative flex-grow">
+                    <input
+                      value={inputMessage}
+                      onChange={(e) => setInputMessage(e.target.value)}
+                      placeholder={selectedImage ? "Přidejte komentář k obrázku..." : "Zeptejte se nebo vložte screenshot..."}
+                      className="w-full bg-[#151515] border border-white/10 rounded-xl pl-4 pr-12 py-3.5 text-sm text-white focus:border-pink-500/50 outline-none transition-all placeholder:text-gray-600"
+                    />
+                    <button type="submit" disabled={loading || (!inputMessage.trim() && !selectedImage)} className="absolute right-2 top-2 p-2 bg-pink-600 rounded-lg text-white hover:bg-pink-500 disabled:opacity-50 disabled:bg-gray-800 transition-colors">
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       )}

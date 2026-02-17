@@ -78,8 +78,8 @@ const Dashboard: React.FC<Props> = ({ onNavigate, userProfile, onLogout }) => {
         <h1 className="text-4xl md:text-7xl font-display text-white mb-6 tracking-tight uppercase leading-none">
           Hlavní <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">rozcestník</span>
         </h1>
-        <p className="text-gray-500 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
-          Zvolte modul pro pokračování ve studiu.
+        <p className="text-gray-300 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
+          Vítejte ve vzdělávacím portálu. Níže naleznete specializované moduly, ke kterým máte přístup na základě absolvovaných školení. Vyberte si svou oblast a pokračujte v prohlubování znalostí.
         </p>
       </header>
 
@@ -107,8 +107,8 @@ const Dashboard: React.FC<Props> = ({ onNavigate, userProfile, onLogout }) => {
                 <Shield className={`w-7 h-7 ${hasCyberAccess ? 'text-cyan-400' : 'text-gray-600'}`} />
               </div>
               <h2 className={`text-2xl md:text-3xl font-display mb-3 uppercase tracking-tight break-words hyphens-auto ${hasCyberAccess ? 'text-white' : 'text-gray-600'}`}>Kyberbezpečnost</h2>
-              <p className="text-sm md:text-base text-gray-500 font-light leading-relaxed line-clamp-3">
-                Kompletní průvodce digitální obranou. Kvízy, ochrana dat a prevence moderních útoků.
+              <p className="text-sm md:text-base text-gray-300 leading-relaxed line-clamp-3">
+                Vstupte do světa digitální bezpečnosti. Zde naleznete interaktivní kvízy, vzdělávací prezentace, videa a pokročilé nástroje pro audit vašich zařízení. Naučte se chránit svá data před moderními hrozbami.
               </p>
             </div>
 
@@ -144,8 +144,8 @@ const Dashboard: React.FC<Props> = ({ onNavigate, userProfile, onLogout }) => {
                 <Bot className={`w-7 h-7 ${hasAiAccess ? 'text-purple-400' : 'text-white'}`} />
               </div>
               <h2 className="text-2xl md:text-3xl font-display text-white mb-3 uppercase tracking-tight">Umělá Inteligence</h2>
-              <p className="text-sm md:text-base text-gray-500 font-light leading-relaxed line-clamp-3">
-                Pokročilé moduly pro práci s AI nástroji. Automatizace, LLM modely a praktické promptování.
+              <p className="text-sm md:text-base text-gray-300 leading-relaxed line-clamp-3">
+                Objevte potenciál umělé inteligence. Přístup k nejnovějším LLM modelům, návody na efektivní promptování a nástroje pro automatizaci vaší práce. Zvyšte svou produktivitu s AI.
               </p>
             </div>
 

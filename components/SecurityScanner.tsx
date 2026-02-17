@@ -1,344 +1,422 @@
 
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Search, ShieldAlert, ShieldCheck, Loader2, Info, Lock, Key, Mail, Shield, AlertTriangle, Globe, ExternalLink, AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShieldAlert, ShieldCheck, Lock, Link as LinkIcon, AlertTriangle, CheckCircle, Search, RefreshCw, Eye, EyeOff, X, HelpCircle, AlertOctagon, Info, ArrowUpRight, Hash, Database, ChevronDown, ChevronUp, Cpu, Server, Globe } from 'lucide-react';
+import HibpScanner from './HibpScanner';
 
 interface Props {
   onBack: () => void;
 }
 
-interface BreachResult {
-  Name: string;
-  Title: string;
-  BreachDate: string;
-  Description: string;
-  DataClasses: string[];
-}
-
-interface UrlReputation {
-  score: number;
-  status: 'clean' | 'suspicious' | 'malicious';
-  detections: string[];
-  server: string;
-  country: string;
-}
-
 const SecurityScanner: React.FC<Props> = ({ onBack }) => {
-  const [activeTab, setActiveTab] = useState<'email' | 'password' | 'url'>('email');
-  const [inputValue, setInputValue] = useState('');
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanResult, setScanResult] = useState<{ status: 'safe' | 'pwned' | 'warning' | null, data: any }>({ status: null, data: null });
-  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'pass' | 'url' | 'hibp'>('pass');
 
-  const hashPassword = async (pwd: string) => {
-    const msgUint8 = new TextEncoder().encode(pwd);
-    const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-6 pb-24">
+      <header className="mb-6 animate-fade-in-up flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-4 w-full md:w-auto">
+          <div className="p-3 bg-rose-500/10 rounded-2xl border border-rose-500/20 backdrop-blur-sm shadow-[0_0_15px_rgba(244,63,94,0.1)]">
+            <ShieldAlert className="w-8 h-8 text-rose-500" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-display text-white uppercase tracking-tight font-bold">Bezpečnostní Lab</h1>
+            <p className="text-gray-400 text-sm font-mono tracking-wide">TOOLS_V2.0 // RISK_ANALYSIS</p>
+          </div>
+        </div>
+
+        {/* Navigation Tabs - Compact & Tech style */}
+        <div className="flex bg-black/40 p-1 rounded-xl border border-white/10 backdrop-blur-md w-full md:w-auto overflow-x-auto">
+          <TabButton
+            active={activeTab === 'pass'}
+            onClick={() => setActiveTab('pass')}
+            icon={Lock}
+            label="Analyzátor Hesel"
+          />
+          <TabButton
+            active={activeTab === 'url'}
+            onClick={() => setActiveTab('url')}
+            icon={LinkIcon}
+            label="URL Scanner"
+          />
+          <TabButton
+            active={activeTab === 'hibp'}
+            onClick={() => setActiveTab('hibp')}
+            icon={Database}
+            label="Úniky Dat"
+          />
+        </div>
+      </header>
+
+      {/* Content Area - Unified Container */}
+      <div className="min-h-[400px] animate-fade-in-up">
+        {activeTab === 'pass' && <PasswordAnalyzer />}
+        {activeTab === 'url' && <UrlScanner />}
+        {activeTab === 'hibp' && (
+          <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl overflow-hidden shadow-2xl relative">
+            <HibpScanner onBack={() => { }} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const TabButton = ({ active, onClick, icon: Icon, label }: { active: boolean, onClick: () => void, icon: any, label: string }) => (
+  <button
+    onClick={onClick}
+    className={`px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${active
+      ? 'bg-rose-600 text-white shadow-[0_0_15px_rgba(225,29,72,0.4)]'
+      : 'text-gray-400 hover:text-white hover:bg-white/5'
+      }`}
+  >
+    <Icon className="w-4 h-4" />
+    <span>{label}</span>
+  </button>
+);
+
+// --- Sub-components ---
+
+const TechInsight = ({ title, icon: Icon, children }: { title: string, icon: any, children: React.ReactNode }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="mt-4 border border-white/5 bg-white/5 rounded-xl overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+      >
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400">
+          <Icon className="w-3.5 h-3.5" /> {title}
+        </div>
+        {isOpen ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
+      </button>
+      {isOpen && (
+        <div className="px-4 py-3 border-t border-white/5 text-xs text-gray-400 leading-relaxed font-mono space-y-2 bg-black/20">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const PasswordAnalyzer = () => {
+  const [password, setPassword] = useState('');
+  const [showPass, setShowPass] = useState(false);
+
+  // Helper to calculate time to crack (educational estimation)
+  const calculateCrackTime = (pwd: string) => {
+    if (!pwd) return "---";
+    const length = pwd.length;
+    const pool =
+      (pwd.match(/[a-z]/) ? 26 : 0) +
+      (pwd.match(/[A-Z]/) ? 26 : 0) +
+      (pwd.match(/[0-9]/) ? 10 : 0) +
+      (pwd.match(/[^a-zA-Z0-9]/) ? 32 : 0);
+
+    // Entropy formula: H = L * log2(N)
+    const entropy = Math.log2(Math.pow(pool, length));
+
+    if (entropy < 28) return "Okamžitě";
+    if (entropy < 36) return "Několik sekund";
+    if (entropy < 60) return "Hodiny až dny";
+    if (entropy < 80) return "Roky až století";
+    return "Miliardy let";
   };
 
-  const scanPassword = async () => {
-    if (!inputValue) return;
-    setIsScanning(true);
-    setScanResult({ status: null, data: null });
-    setError(null);
-
-    try {
-      const fullHash = await hashPassword(inputValue);
-      const prefix = fullHash.substring(0, 5);
-      const suffix = fullHash.substring(5);
-
-      const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
-      if (!response.ok) throw new Error('API Timeout');
-
-      const text = await response.text();
-      const lines = text.split('\n');
-      const match = lines.find(line => line.split(':')[0] === suffix);
-
-      if (match) {
-        const count = match.split(':')[1].trim();
-        setScanResult({ status: 'pwned', data: { count } });
-      } else {
-        setScanResult({ status: 'safe', data: null });
-      }
-    } catch (err) {
-      setError('Služba Have I Been Pwned je dočasně nedostupná.');
-    } finally {
-      setIsScanning(false);
-    }
+  const calculateStrength = (pwd: string) => {
+    let score = 0;
+    if (pwd.length > 8) score += 20;
+    if (pwd.length > 12) score += 20;
+    if (/[A-Z]/.test(pwd)) score += 15;
+    if (/[0-9]/.test(pwd)) score += 15;
+    if (/[^A-Za-z0-9]/.test(pwd)) score += 30;
+    return Math.min(score, 100);
   };
 
-  const scanEmail = async () => {
-    if (!inputValue || !inputValue.includes('@')) return;
-    setIsScanning(true);
-    setScanResult({ status: null, data: null });
+  const strength = calculateStrength(password);
+  const crackTime = calculateCrackTime(password);
 
-    // Simulace HIBP v3 API (vyžaduje klíč pro real-time check)
+  const getLabel = (s: number) => {
+    if (s < 40) return { text: "Slabé", color: "text-red-500", bg: "bg-red-500", border: "border-red-500/30" };
+    if (s < 70) return { text: "Průměrné", color: "text-amber-500", bg: "bg-amber-500", border: "border-amber-500/30" };
+    return { text: "Silné", color: "text-emerald-500", bg: "bg-emerald-500", border: "border-emerald-500/30" };
+  };
+  const label = getLabel(strength);
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Main Input Card */}
+      <div className="lg:col-span-7 bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-center">
+
+        <div className="relative z-10 space-y-6">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2 font-display uppercase tracking-tight flex items-center gap-2">
+              <Lock className="w-5 h-5 text-rose-500" /> Analyzátor Hesel
+            </h2>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Zadejte heslo a zjistěte jeho entropii (matematickou odolnost). <br />
+              <span className="text-gray-500 text-sm flex items-center gap-1 mt-1">
+                <Cpu className="w-4 h-4 text-emerald-500" />
+                <strong>Client-Side Only:</strong> Výpočet probíhá pouze ve vašem prohlížeči. Na server nic neposíláme.
+              </span>
+            </p>
+          </div>
+
+          <div className="relative">
+            <input
+              type={showPass ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Zadejte heslo..."
+              className="w-full bg-black/40 border border-white/10 rounded-xl pl-11 pr-12 py-5 text-lg text-white placeholder-gray-600 focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/20 transition-all font-mono shadow-inner"
+            />
+            <Hash className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <button
+              onClick={() => setShowPass(!showPass)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white p-2 rounded-lg hover:bg-white/5 transition-colors"
+            >
+              {showPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+            {/* Character count indicator */}
+            <div className="absolute right-14 top-1/2 -translate-y-1/2 text-[10px] text-gray-600 font-mono">
+              {password.length} znaků
+            </div>
+          </div>
+
+          {/* Strength Meter */}
+          <div className={`p-5 rounded-2xl border bg-black/20 backdrop-blur-sm transition-colors duration-500 ${password ? label.border : 'border-white/5'}`}>
+            <div className="flex justify-between items-end mb-3">
+              <div>
+                <span className="text-xs text-gray-500 font-bold uppercase tracking-widest block mb-1">Skóre Bezpečnosti</span>
+                <span className={`text-base font-bold uppercase tracking-wide flex items-center gap-2 ${password ? label.color : 'text-gray-600'}`}>
+                  {password ? label.text : "Čekám na vstup..."}
+                </span>
+              </div>
+              <span className="text-4xl font-mono text-white font-bold tracking-tighter opacity-90">{strength}<span className="text-lg align-top opacity-50">%</span></span>
+            </div>
+
+            <div className="h-2.5 bg-gray-800 rounded-full overflow-hidden">
+              <div
+                className={`h-full transition-all duration-1000 ease-out shadow-[0_0_15px_currentColor] ${password ? label.bg : 'bg-gray-800'}`}
+                style={{ width: `${strength}%` }}
+              ></div>
+            </div>
+          </div>
+
+          <TechInsight title="Jak to funguje (Technické pozadí)" icon={Cpu}>
+            <p className="mb-2 text-sm">
+              <strong className="text-rose-400">Entropie (H):</strong> Měříme "nepředvídatelnost" hesla v bitech. Vzorec je <code>H = L * log2(N)</code>, kde L je délka a N velikost sady znaků.
+            </p>
+            <p className="text-sm">
+              <strong className="text-rose-400">Slovníkové útoky:</strong> Běžná slova ("heslo", "iloveyou") mají v praxi nulovou entropii, protože jsou první na řadě při prolamování.
+            </p>
+          </TechInsight>
+        </div>
+      </div>
+
+      {/* Info & Stats Column */}
+      <div className="lg:col-span-5 space-y-4 flex flex-col">
+        {/* Crack Time Card */}
+        <div className="bg-[#1a1a1a] border border-white/10 rounded-3xl p-6 relative overflow-hidden flex-1">
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-50"></div>
+          <div className="relative z-10 flex flex-col h-full justify-center">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-rose-400 mb-3 flex items-center gap-2">
+              <AlertOctagon className="w-4 h-4" /> Čas prolomení (GPU)
+            </h3>
+            <div className="text-3xl font-display text-white font-bold leading-none mb-3 tracking-tight">{crackTime}</div>
+            <p className="text-sm text-gray-500 leading-relaxed">
+              Odhad pro moderní GPU (RTX 4090) schopnou vyzkoušet miliardy kombinací za sekundu.
+            </p>
+          </div>
+        </div>
+
+        {/* Checklist */}
+        <div className="bg-[#1a1a1a] border border-white/10 rounded-3xl p-6">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Analýza znakové sady</h3>
+          <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+            <CheckItem compact checked={password.length >= 12} label="Délka (12+)" />
+            <CheckItem compact checked={/[A-Z]/.test(password)} label="Velká písmena" />
+            <CheckItem compact checked={/[0-9]/.test(password)} label="Číslice" />
+            <CheckItem compact checked={/[^A-Za-z0-9]/.test(password)} label="Speciální znaky" />
+          </div>
+        </div>
+
+        {/* Tip */}
+        <div className="bg-emerald-900/10 border border-emerald-500/10 rounded-3xl p-5 flex items-start gap-3">
+          <Info className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-emerald-400/90 leading-relaxed font-mono">
+            <strong className="text-emerald-400 block mb-1 uppercase tracking-wider text-xs">Tip experta:</strong>
+            Délka je důležitější než složitost. Heslo "KoneZerouSen0!" (Passphrase) je bezpečnější než "tr5&b#x".
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CheckItem = ({ checked, label, compact = false }: { checked: boolean, label: string, compact?: boolean }) => (
+  <div className={`flex items-center gap-2.5 transition-all ${checked ? 'opacity-100' : 'opacity-40'}`}>
+    {checked ? (
+      <div className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/50">
+        <CheckCircle className="w-3 h-3 text-emerald-500" />
+      </div>
+    ) : (
+      <div className="w-4 h-4 rounded-full border border-gray-600 bg-transparent" />
+    )}
+    <span className={`text-[11px] font-bold uppercase tracking-widest ${checked ? 'text-white' : 'text-gray-500'}`}>{label}</span>
+  </div>
+);
+
+const UrlScanner = () => {
+  const [url, setUrl] = useState('');
+  const [result, setResult] = useState<'safe' | 'suspicious' | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [flags, setFlags] = useState<string[]>([]);
+
+  const analyze = () => {
+    if (!url) return;
+    setIsAnalyzing(true);
+    setFlags([]);
+    setResult(null);
+
     setTimeout(() => {
-      const isDemoPwned = inputValue.toLowerCase().includes('leak') || inputValue.toLowerCase().includes('demo');
-      if (isDemoPwned) {
-        setScanResult({ 
-          status: 'pwned', 
-          data: [
-            { Name: 'LinkedIn', Title: 'LinkedIn Leak', BreachDate: '2016-05-17', Description: 'V roce 2016 došlo k úniku více než 164 milionů e-mailových adres.', DataClasses: ['Email addresses', 'Passwords'] },
-            { Name: 'Adobe', Title: 'Adobe Leak', BreachDate: '2013-10-04', Description: 'Masivní únik dat postihl 153 milionů uživatelů.', DataClasses: ['Email addresses', 'Password hints'] }
-          ] 
-        });
-      } else {
-        setScanResult({ status: 'safe', data: null });
-      }
-      setIsScanning(false);
+      const suspiciousFlags = [];
+      const lowerUrl = url.toLowerCase();
+
+      // Heuristic checks
+      if (!lowerUrl.startsWith('https://')) suspiciousFlags.push("Chybí šifrování (HTTPS)");
+      if (lowerUrl.includes('http:')) suspiciousFlags.push("Nezabezpečený protokol HTTP");
+      if (lowerUrl.length > 70) suspiciousFlags.push("Podezřele dlouhá URL");
+      if (lowerUrl.includes('@')) suspiciousFlags.push("Znak @ (pokus o zmatení)");
+      if (lowerUrl.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)) suspiciousFlags.push("IP adresa místo domény");
+      if (lowerUrl.includes('login') || lowerUrl.includes('verify')) suspiciousFlags.push("Slova pro phishing (login/verify)");
+
+      setFlags(suspiciousFlags);
+      setResult(suspiciousFlags.length > 0 ? 'suspicious' : 'safe');
+      setIsAnalyzing(false);
     }, 1500);
   };
 
-  const scanUrl = async () => {
-    if (!inputValue) return;
-    setIsScanning(true);
-    setScanResult({ status: null, data: null });
-
-    // Simulace APIVoid / URL Reputation
-    setTimeout(() => {
-      const suspiciousWords = ['win', 'free', 'prize', 'gift', 'login', 'verify', 'update'];
-      const isSuspicious = suspiciousWords.some(word => inputValue.toLowerCase().includes(word));
-      
-      if (isSuspicious) {
-        setScanResult({ 
-          status: 'warning', 
-          data: {
-            score: 85,
-            status: 'suspicious',
-            detections: ['Phishing Database', 'Blacklisted Domain', 'New Domain Activity'],
-            server: 'Cloudflare',
-            country: 'Unknown'
-          } as UrlReputation
-        });
-      } else {
-        setScanResult({ 
-          status: 'safe', 
-          data: {
-            score: 0,
-            status: 'clean',
-            detections: [],
-            server: 'Trusted Hosting',
-            country: 'EU'
-          } as UrlReputation
-        });
-      }
-      setIsScanning(false);
-    }, 1800);
-  };
-
-  const handleScan = () => {
-    if (activeTab === 'email') scanEmail();
-    else if (activeTab === 'password') scanPassword();
-    else scanUrl();
-  };
-
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 relative z-10 min-h-screen">
-      <button onClick={onBack} className="mb-10 text-gray-500 hover:text-white transition-all flex items-center gap-3 text-xs font-bold tracking-widest uppercase font-mono group">
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Zpět do menu
-      </button>
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Scanner Card */}
+      <div className="lg:col-span-7 bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-center min-h-[350px]">
 
-      <header className="mb-12 animate-fade-in-up">
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-rose-500/30 bg-rose-500/5 text-rose-400 text-[10px] uppercase tracking-widest mb-6 font-mono inline-flex">
-           <ShieldAlert className="w-3 h-3" /> Security Lab
-        </div>
-        <h1 className="text-3xl md:text-5xl font-display text-white mb-4 uppercase tracking-tighter leading-none">
-           Bezpečnostní <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-600">Skenery</span>
-        </h1>
-        <p className="text-gray-400 font-light max-w-2xl leading-relaxed">
-           Prověřte svou digitální stopu. Integrované nástroje <strong>Have I Been Pwned</strong> a <strong>URL Reputation</strong> pro analýzu hrozeb v reálném čase.
-        </p>
-      </header>
+        <div className="relative z-10 w-full space-y-6">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2 font-display uppercase tracking-tight flex items-center gap-2">
+              <Search className="w-5 h-5 text-cyan-500" /> Scanner Odkazů
+            </h2>
+            <p className="text-gray-400 text-sm leading-relaxed mb-1">
+              Vložte odkaz z e-mailu nebo SMS pro detekci phishingu.
+            </p>
+            <p className="text-gray-500 text-xs flex items-center gap-1">
+              <Cpu className="w-3 h-3 text-cyan-500" />
+              <strong>Lokální Heuristika:</strong> Analýza probíhá u vás. URL neposíláme na externí servery (pro ochranu soukromí).
+            </p>
+          </div>
 
-      {/* NAVIGATION TABS */}
-      <div className="flex gap-2 mb-8 bg-white/5 p-1.5 rounded-2xl border border-white/5 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-         {[
-           { id: 'email', label: 'Email', icon: Mail },
-           { id: 'password', label: 'Heslo', icon: Key },
-           { id: 'url', label: 'Webová URL', icon: Globe }
-         ].map((tab) => (
-           <button 
-             key={tab.id}
-             onClick={() => { setActiveTab(tab.id as any); setScanResult({status:null, data:null}); setInputValue(''); setError(null); }}
-             className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all ${activeTab === tab.id ? 'bg-rose-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'}`}
-           >
-              <tab.icon className="w-4 h-4" /> <span className="hidden sm:inline">{tab.label}</span>
-           </button>
-         ))}
-      </div>
-
-      {/* INPUT AREA */}
-      <div className="glass-panel p-6 md:p-8 rounded-3xl border border-white/10 mb-8 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-         <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-grow">
-               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-                  {activeTab === 'email' && <Mail className="w-5 h-5" />}
-                  {activeTab === 'password' && <Lock className="w-5 h-5" />}
-                  {activeTab === 'url' && <Globe className="w-5 h-5" />}
-               </div>
-               <input 
-                 type={activeTab === 'password' ? 'password' : 'text'} 
-                 value={inputValue}
-                 onChange={(e) => setInputValue(e.target.value)}
-                 onKeyDown={(e) => e.key === 'Enter' && handleScan()}
-                 placeholder={
-                   activeTab === 'email' ? 'Zadejte svůj e-mail...' : 
-                   activeTab === 'password' ? 'Zadejte heslo k ověření...' : 
-                   'Vložte URL nebo doménu (např. phishing-web.cz)...'
-                 }
-                 className="w-full bg-black/40 border border-white/10 rounded-xl pl-12 pr-4 py-4 text-white focus:outline-none focus:border-rose-500/50 transition-all font-mono text-sm"
-               />
+          <div className="flex flex-col gap-4">
+            <div className="relative group w-full">
+              <div className="absolute inset-0 bg-cyan-500/20 blur-lg rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity"></div>
+              <input
+                type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && analyze()}
+                placeholder="Např. http://banka-login.cz..."
+                className="relative w-full bg-black border border-white/10 rounded-xl pl-11 pr-4 py-5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition-all font-mono shadow-inner"
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                <LinkIcon className="w-4 h-4 text-gray-500" />
+              </div>
             </div>
-            <button 
-              onClick={handleScan}
-              disabled={isScanning || !inputValue}
-              className="bg-white text-black hover:bg-rose-50 px-8 py-4 rounded-xl font-bold text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-2 disabled:opacity-30 shadow-xl"
+
+            <button
+              onClick={analyze}
+              disabled={isAnalyzing || !url}
+              className="w-full bg-white text-black py-4 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all disabled:opacity-50 disabled:hover:bg-white disabled:shadow-none flex items-center justify-center gap-2 group"
             >
-              {isScanning ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Analyzovat <Search className="w-4 h-4" /></>}
+              {isAnalyzing ? <RefreshCw className="w-4 h-4 animate-spin" /> : (
+                <>
+                  Skenovat Odkaz <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </>
+              )}
             </button>
-         </div>
-         
-         <div className="mt-4 flex items-center gap-2 text-[10px] text-gray-600 font-mono uppercase tracking-widest">
-            <Info className="w-3 h-3" /> 
-            {activeTab === 'email' && "Scanner prohledává veřejné databáze úniků (HIBP)."}
-            {activeTab === 'password' && "Využíváme k-Anonymity SHA-1 hashování. Heslo zůstává u vás."}
-            {activeTab === 'url' && "Prověřuje doménu proti blacklistům a detekuje malware/phishing."}
-         </div>
+          </div>
+
+          <TechInsight title="Co kontrolujeme (Heuristika)" icon={Cpu}>
+            <ul className="mb-2 list-disc list-inside space-y-1">
+              <li><strong className="text-cyan-400">Protokol:</strong> Vyžadujeme <code>https://</code> (šifrované spojení).</li>
+              <li><strong className="text-cyan-400">Struktura:</strong> Hledáme podezřelé IP adresy místo domén.</li>
+              <li><strong className="text-cyan-400">Homografy:</strong> Znaky z jiných abeced (např. cyrilice 'a'), které vypadají latinsky, ale vedou jinam.</li>
+            </ul>
+            <p className="text-[10px] opacity-70">
+              *Poznámka: Toto je základní kontrola struktury. Pro 100% jistotu by bylo nutné porovnat s databází Google Safe Browsing (což vyžaduje odeslání URL).
+            </p>
+          </TechInsight>
+        </div>
       </div>
 
-      {/* SCANNING / RESULTS */}
-      <div className="min-h-[300px]">
-        {isScanning && (
-          <div className="flex flex-col items-center justify-center py-20">
-             <div className="relative w-24 h-24 mb-8">
-                <div className="absolute inset-0 border-2 border-rose-500/20 rounded-full"></div>
-                <div className="absolute inset-0 border-t-2 border-rose-500 rounded-full animate-spin"></div>
-                <div className="absolute inset-4 border border-rose-500/10 rounded-full animate-ping"></div>
-             </div>
-             <p className="text-rose-500 font-mono text-[10px] uppercase tracking-[0.3em] animate-pulse">Deep scanning in progress...</p>
-          </div>
-        )}
-
-        {scanResult.status === 'safe' && (
-          <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] p-10 text-center animate-fade-in-up">
-             <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
-                <ShieldCheck className="w-10 h-10 text-emerald-400" />
-             </div>
-             <h2 className="text-2xl font-display text-white mb-2 uppercase tracking-wide">Bez nálezu</h2>
-             <p className="text-gray-500 max-w-sm mx-auto text-sm leading-relaxed">
-               {activeTab === 'url' ? 'Webová stránka se zdá být bezpečná a není na žádném blacklistu.' : 'Žádné záznamy o kompromitaci nebyly nalezeny.'}
-             </p>
-          </div>
-        )}
-
-        {scanResult.status === 'pwned' && (
-          <div className="space-y-6 animate-fade-in-up">
-             <div className="bg-rose-500/5 border border-rose-500/20 rounded-[2.5rem] p-10 text-center">
-                <div className="w-20 h-20 bg-rose-500/10 border border-rose-500/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(244,63,94,0.3)]">
-                   <AlertTriangle className="w-10 h-10 text-rose-500" />
+      {/* Results / Info Column */}
+      <div className="lg:col-span-5 flex flex-col gap-4">
+        {/* Result Card */}
+        <div className={`flex-1 rounded-3xl border p-6 transition-all duration-500 relative overflow-hidden flex flex-col justify-center min-h-[160px] ${result
+          ? (result === 'safe' ? 'bg-emerald-900/10 border-emerald-500/20' : 'bg-red-900/10 border-red-500/20')
+          : 'bg-[#1a1a1a] border-white/5'
+          }`}>
+          {result ? (
+            <div className="animate-fade-in-up">
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`p-2 rounded-full ${result === 'safe' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-500'}`}>
+                  {result === 'safe' ? <ShieldCheck className="w-8 h-8" /> : <AlertTriangle className="w-8 h-8" />}
                 </div>
-                <h2 className="text-2xl font-display text-white mb-2 uppercase">Data kompromitována</h2>
-                <p className="text-gray-400 max-w-sm mx-auto text-sm">
-                   {activeTab === 'email' 
-                     ? `Váš e-mail byl nalezen v uniklých databázích.` 
-                     : `Toto heslo se objevilo v ${scanResult.data.count} únicích!`}
-                </p>
-             </div>
-
-             {activeTab === 'email' && scanResult.data && (
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {scanResult.data.map((breach: BreachResult, idx: number) => (
-                    <div key={idx} className="bg-[#111] border border-white/5 p-6 rounded-3xl hover:border-rose-500/30 transition-all">
-                       <h3 className="text-white font-bold mb-1 text-base">{breach.Title}</h3>
-                       <div className="text-[10px] text-rose-400 font-mono uppercase mb-4 tracking-widest">{breach.BreachDate}</div>
-                       <p className="text-xs text-gray-500 leading-relaxed mb-4">{breach.Description}</p>
-                       <div className="flex flex-wrap gap-2">
-                          {breach.DataClasses.map((cls, i) => (
-                            <span key={i} className="text-[8px] bg-white/5 px-2 py-1 rounded text-gray-400 font-mono uppercase tracking-tighter">{cls}</span>
-                          ))}
-                       </div>
-                    </div>
-                  ))}
-               </div>
-             )}
-             
-             <div className="p-6 bg-rose-500/5 border border-rose-500/10 rounded-2xl flex items-center gap-4">
-                <Shield className="w-8 h-8 text-rose-400 flex-shrink-0" />
                 <div>
-                   <h4 className="text-white text-xs font-bold uppercase mb-1">Doporučený postup</h4>
-                   <p className="text-xs text-gray-500 leading-relaxed">Okamžitě změňte heslo u všech služeb, kde jste ho používali. Aktivujte dvoufaktorové ověření (2FA).</p>
+                  <h3 className={`font-bold uppercase tracking-wide text-lg ${result === 'safe' ? 'text-emerald-400' : 'text-red-500'}`}>
+                    {result === 'safe' ? 'Bezpečné' : 'Riziko'}
+                  </h3>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Status URL</p>
                 </div>
-             </div>
-          </div>
-        )}
+              </div>
 
-        {scanResult.status === 'warning' && activeTab === 'url' && (
-          <div className="space-y-6 animate-fade-in-up">
-             <div className="bg-rose-500/5 border border-rose-500/20 rounded-[2.5rem] p-10 text-center">
-                <div className="w-20 h-20 bg-rose-500/10 border border-rose-500/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(244,63,94,0.3)]">
-                   <AlertCircle className="w-10 h-10 text-rose-500" />
-                </div>
-                <h2 className="text-2xl font-display text-white mb-2 uppercase">Riziková Doména</h2>
-                <p className="text-gray-400 max-w-sm mx-auto text-sm">
-                   Reputační skóre: <span className="text-rose-500 font-bold">{scanResult.data.score}/100</span>
+              {flags.length > 0 ? (
+                <ul className="space-y-2 mb-2">
+                  {flags.map((flag, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-red-300 font-mono bg-red-500/10 p-2.5 rounded-lg border border-red-500/10">
+                      <X className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" /> {flag}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-400 leading-relaxed font-light">
+                  URL nevykazuje známky phishingu dle lokální analýzy.
                 </p>
-             </div>
-
-             <div className="bg-[#111] border border-white/5 rounded-3xl p-8">
-                <h3 className="text-white font-bold mb-6 uppercase text-xs tracking-widest flex items-center gap-2">
-                   <AlertTriangle className="w-4 h-4 text-rose-500" /> Detekované hrozby
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                   {scanResult.data.detections.map((det: string, idx: number) => (
-                     <div key={idx} className="flex items-center gap-3 p-4 bg-rose-500/5 border border-rose-500/10 rounded-xl">
-                        <div className="w-2 h-2 bg-rose-500 rounded-full animate-pulse"></div>
-                        <span className="text-xs text-gray-300 font-mono">{det}</span>
-                     </div>
-                   ))}
-                </div>
-                
-                <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/5 pt-8">
-                   <div>
-                      <div className="text-[10px] text-gray-500 uppercase font-mono mb-1">Server Provider</div>
-                      <div className="text-white text-sm font-bold">{scanResult.data.server}</div>
-                   </div>
-                   <div>
-                      <div className="text-[10px] text-gray-500 uppercase font-mono mb-1">Lokalizace</div>
-                      <div className="text-white text-sm font-bold">{scanResult.data.country}</div>
-                   </div>
-                </div>
-             </div>
-          </div>
-        )}
-
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 text-center animate-shake">
-             <p className="text-red-400 text-xs font-mono">{error}</p>
-          </div>
-        )}
-      </div>
-
-      {/* TECH INFO FOOTER */}
-      <div className="mt-20 border-t border-white/5 pt-12">
-         <h3 className="text-white font-display text-base mb-6 uppercase tracking-wider">Metodika analýzy</h3>
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="space-y-3">
-               <div className="text-rose-500 font-bold text-lg font-mono">k-Anonymity</div>
-               <h4 className="text-white font-bold text-xs uppercase">Bezpečné heslo</h4>
-               <p className="text-xs text-gray-500 leading-relaxed">Heslo se nikdy neposílá celé. API prověřuje pouze začátek otisku (hash), čímž je zachováno 100% soukromí.</p>
+              )}
             </div>
-            <div className="space-y-3">
-               <div className="text-rose-500 font-bold text-lg font-mono">Threat Intel</div>
-               <h4 className="text-white font-bold text-xs uppercase">Databáze úniků</h4>
-               <p className="text-xs text-gray-500 leading-relaxed">Analyzujeme miliardy uniklých záznamů ze služeb jako LinkedIn, Adobe, Canva či Facebook.</p>
+          ) : (
+            <div className="text-center text-gray-600 space-y-3">
+              <div className="w-12 h-12 rounded-full bg-white/5 mx-auto flex items-center justify-center border border-white/5">
+                <Search className="w-5 h-5 opacity-40" />
+              </div>
+              <p className="text-xs font-mono uppercase tracking-widest opacity-60">Připraveno ke skenování</p>
             </div>
-            <div className="space-y-3">
-               <div className="text-rose-500 font-bold text-lg font-mono">Domain Analysis</div>
-               <h4 className="text-white font-bold text-xs uppercase">Reputace URL</h4>
-               <p className="text-xs text-gray-500 leading-relaxed">Kombinujeme data z APIVoid, Google Safe Browsing a PhishTank pro detekci škodlivých odkazů.</p>
-            </div>
-         </div>
+          )}
+        </div>
+
+        {/* Pro Tip */}
+        <div className="bg-[#1a1a1a] border border-white/10 rounded-3xl p-6">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3 flex items-center gap-2">
+            <HelpCircle className="w-4 h-4" /> Phishing Radar
+          </h3>
+          <ul className="space-y-3">
+            <li className="flex gap-3 text-xs text-gray-400 leading-relaxed">
+              <span className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center text-[10px] font-bold text-gray-500 flex-shrink-0 border border-white/5">1</span>
+              <span>Pozor na urgenci. Hackeři chtějí, abyste jednali ve stresu.</span>
+            </li>
+            <li className="flex gap-3 text-xs text-gray-400 leading-relaxed">
+              <span className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center text-[10px] font-bold text-gray-500 flex-shrink-0 border border-white/5">2</span>
+              <span>Kontrolujte doménu. `paypal.com` není to samé jako `paypal-secure.com`.</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );
