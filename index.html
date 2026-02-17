@@ -1,175 +1,270 @@
-
 <!DOCTYPE html>
 <html lang="cs">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kyberbezpečnost - Kurz</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700;800&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Rajdhani', 'sans-serif'],
-              display: ['Orbitron', 'sans-serif'],
-              mono: ['"JetBrains Mono"', 'monospace'],
-            },
-            animation: {
-              'shimmer': 'shimmer 2s linear infinite',
-            }
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kyberbezpečnost - Kurz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700;800&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Rajdhani', 'sans-serif'],
+            display: ['Orbitron', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          animation: {
+            'shimmer': 'shimmer 2s linear infinite',
           }
         }
       }
-    </script>
-    <style>
-      body {
-        font-family: 'Rajdhani', sans-serif;
-        background-color: #050505;
-        color: #e2e8f0;
-        overflow-x: hidden;
-      }
-      
-      /* Grid Background Effect */
-      .bg-grid-pattern {
-        background-size: 60px 60px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                          linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-        mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-        -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+    }
 
-      /* Grid Beams */
-      .grid-beam {
-        position: absolute;
+    /* Grid Background Effect */
+    .bg-grid-pattern {
+      background-size: 60px 60px;
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+    }
+
+    /* Grid Beams */
+    .grid-beam {
+      position: absolute;
+      opacity: 0;
+      z-index: 1;
+      border-radius: 9999px;
+    }
+
+    /* Beam Colors - Using CSS variables for dynamic themes */
+    :root {
+      --color-emerald: #10b981;
+      --color-purple: #a855f7;
+      --color-rose: #f43f5e;
+    }
+
+    .grid-beam-emerald {
+      --beam-color: var(--color-emerald);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.8), 0 0 5px rgba(16, 185, 129, 1);
+    }
+
+    .grid-beam-purple {
+      --beam-color: var(--color-purple);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 5px rgba(168, 85, 247, 1);
+    }
+
+    .grid-beam-rose {
+      --beam-color: var(--color-rose);
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.8), 0 0 5px rgba(244, 63, 94, 1);
+    }
+
+    .grid-beam-h {
+      height: 1px;
+      width: 100px;
+      /* Tail length */
+      background: linear-gradient(90deg, transparent, var(--beam-color, #06b6d4), transparent);
+      animation: beam-horizontal 7s linear infinite;
+    }
+
+    .grid-beam-v {
+      width: 1px;
+      height: 100px;
+      /* Tail length */
+      background: linear-gradient(180deg, transparent, var(--beam-color, #06b6d4), transparent);
+      animation: beam-vertical 7s linear infinite;
+    }
+
+    @keyframes beam-horizontal {
+      0% {
+        left: -200px;
         opacity: 0;
-        z-index: 1;
-        border-radius: 9999px;
       }
 
-      /* Beam Colors - Using CSS variables for dynamic themes */
-      :root {
-         --color-emerald: #10b981;
-         --color-purple: #a855f7;
-         --color-rose: #f43f5e;
+      10% {
+        opacity: 1;
       }
 
-      .grid-beam-emerald {
-        --beam-color: var(--color-emerald);
-        box-shadow: 0 0 10px rgba(16, 185, 129, 0.8), 0 0 5px rgba(16, 185, 129, 1);
+      90% {
+        opacity: 1;
       }
 
-      .grid-beam-purple {
-        --beam-color: var(--color-purple);
-        box-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 5px rgba(168, 85, 247, 1);
+      100% {
+        left: 100%;
+        opacity: 0;
+      }
+    }
+
+    @keyframes beam-vertical {
+      0% {
+        top: -200px;
+        opacity: 0;
       }
 
-      .grid-beam-rose {
-        --beam-color: var(--color-rose);
-        box-shadow: 0 0 10px rgba(244, 63, 94, 0.8), 0 0 5px rgba(244, 63, 94, 1);
+      10% {
+        opacity: 1;
       }
 
-      .grid-beam-h {
-        height: 1px;
-        width: 100px; /* Tail length */
-        background: linear-gradient(90deg, transparent, var(--beam-color, #06b6d4), transparent);
-        animation: beam-horizontal 7s linear infinite;
+      90% {
+        opacity: 1;
       }
 
-      .grid-beam-v {
-        width: 1px;
-        height: 100px; /* Tail length */
-        background: linear-gradient(180deg, transparent, var(--beam-color, #06b6d4), transparent);
-        animation: beam-vertical 7s linear infinite;
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    /* Animations */
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
       }
 
-      @keyframes beam-horizontal {
-        0% { left: -200px; opacity: 0; }
-        10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { left: 100%; opacity: 0; }
+      50% {
+        transform: translateY(-20px);
       }
 
-      @keyframes beam-vertical {
-        0% { top: -200px; opacity: 0; }
-        10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { top: 100%; opacity: 0; }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    .animate-float {
+      animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        opacity: 0.3;
       }
 
-      /* Animations */
-      @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-        100% { transform: translateY(0px); }
+      50% {
+        opacity: 0.6;
       }
-      
-      .animate-float {
-        animation: float 8s ease-in-out infinite;
+    }
+
+    .animate-glow {
+      animation: glow 4s ease-in-out infinite;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
       }
 
-      @keyframes glow {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 0.6; }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes scan-line {
+      0% {
+        transform: translateY(-100%);
+        opacity: 0;
       }
 
-      .animate-glow {
-        animation: glow 4s ease-in-out infinite;
+      20% {
+        opacity: 1;
       }
 
-      @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
+      80% {
+        opacity: 1;
       }
 
-      .animate-fade-in-up {
-        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      100% {
+        transform: translateY(400%);
+        opacity: 0;
+      }
+    }
+
+    .animate-scan-line {
+      animation: scan-line 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes unlock-success {
+      0% {
+        transform: scale(1);
+        filter: blur(0);
+        opacity: 1;
       }
 
-      @keyframes scan-line {
-        0% { transform: translateY(-100%); opacity: 0; }
-        20% { opacity: 1; }
-        80% { opacity: 1; }
-        100% { transform: translateY(400%); opacity: 0; }
+      100% {
+        transform: scale(1.05);
+        filter: blur(20px);
+        opacity: 0;
+      }
+    }
+
+    .animate-unlock {
+      animation: unlock-success 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%);
       }
 
-      .animate-scan-line {
-        animation: scan-line 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
       }
 
-      @keyframes unlock-success {
-        0% { transform: scale(1); filter: blur(0); opacity: 1; }
-        100% { transform: scale(1.05); filter: blur(20px); opacity: 0; }
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        transform: translateX(-4px);
       }
 
-      .animate-unlock {
-        animation: unlock-success 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      20%,
+      40%,
+      60%,
+      80% {
+        transform: translateX(4px);
       }
+    }
 
-      @keyframes shimmer {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-      }
+    .animate-shake {
+      animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+    }
 
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-        20%, 40%, 60%, 80% { transform: translateX(4px); }
-      }
-
-      .animate-shake {
-        animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
-      }
-
-      .glass-panel {
-        background: rgba(10, 10, 10, 0.6);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      }
-    </style>
+    .glass-panel {
+      background: rgba(10, 10, 10, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -183,8 +278,10 @@
 }
 </script>
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>

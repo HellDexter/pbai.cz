@@ -228,8 +228,8 @@ URL: ${article.url}
 
       {/* Header & Search */}
       <header className="mb-8 animate-fade-in-up flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 className="text-2xl font-display text-white uppercase tracking-tight flex items-center gap-2">
-          <Newspaper className="w-6 h-6 text-amber-500" /> Cyber News
+        <h1 className="text-2xl font-display text-gray-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
+          <Newspaper className="w-6 h-6 text-amber-600 dark:text-amber-500" /> Cyber News
         </h1>
 
         <div className="flex items-center gap-3 w-full md:w-auto">
@@ -240,9 +240,9 @@ URL: ${article.url}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Hledat téma (např. Apple)..."
-              className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-all font-mono placeholder-gray-600"
+              className="w-full bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-amber-500/50 transition-all font-mono placeholder-gray-500 dark:placeholder-gray-600"
             />
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-amber-500 transition-colors" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-amber-600 dark:group-focus-within:text-amber-500 transition-colors" />
           </form>
 
           {isSearching && (
@@ -252,7 +252,7 @@ URL: ${article.url}
           <button
             onClick={() => fetchNewsWithAI(isSearching ? searchQuery : undefined)}
             disabled={isLoading}
-            className="text-gray-500 hover:text-white p-2 group relative"
+            className="text-gray-500 hover:text-gray-900 dark:hover:text-white p-2 group relative"
             title="Vynutit aktualizaci"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
@@ -285,8 +285,8 @@ URL: ${article.url}
           {isSearching ? (
             <section className="animate-fade-in-up">
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center"><Search className="w-6 h-6 text-amber-500" /></div>
-                <h2 className="text-2xl font-display text-white uppercase tracking-tight">Výsledky pro "{searchQuery}"</h2>
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-center justify-center"><Search className="w-6 h-6 text-amber-600 dark:text-amber-500" /></div>
+                <h2 className="text-2xl font-display text-gray-900 dark:text-white uppercase tracking-tight">Výsledky pro "{searchQuery}"</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {articles.length > 0 ? articles.map((a, i) => <ArticleCard key={i} article={a} idx={i} onClick={() => handleArticleClick(a)} />) : <div className="col-span-full border border-dashed border-white/5 p-8 rounded-2xl text-center text-gray-500 font-mono text-xs">Žádné výsledky pro "{searchQuery}".</div>}
@@ -296,8 +296,8 @@ URL: ${article.url}
             <>
               <section className="animate-fade-in-up">
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center"><MapPin className="w-6 h-6 text-amber-500" /></div>
-                  <h2 className="text-2xl font-display text-white uppercase tracking-tight">Incidenty v ČR</h2>
+                  <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-center justify-center"><MapPin className="w-6 h-6 text-amber-600 dark:text-amber-500" /></div>
+                  <h2 className="text-2xl font-display text-gray-900 dark:text-white uppercase tracking-tight">Incidenty v ČR</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {domesticArticles.length > 0 ? domesticArticles.map((a, i) => <ArticleCard key={i} article={a} idx={i} onClick={() => handleArticleClick(a)} />) : <div className="col-span-full border border-dashed border-white/5 p-8 rounded-2xl text-center text-gray-500 font-mono text-xs">Žádné lokální zprávy.</div>}
@@ -306,8 +306,8 @@ URL: ${article.url}
 
               <section className="animate-fade-in-up">
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center"><Globe className="w-6 h-6 text-orange-500" /></div>
-                  <h2 className="text-2xl font-display text-white uppercase tracking-tight">Světová scéna</h2>
+                  <div className="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 flex items-center justify-center"><Globe className="w-6 h-6 text-orange-600 dark:text-orange-500" /></div>
+                  <h2 className="text-2xl font-display text-gray-900 dark:text-white uppercase tracking-tight">Světová scéna</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {worldArticles.length > 0 ? worldArticles.map((a, i) => <ArticleCard key={i} article={a} idx={i + 10} onClick={() => handleArticleClick(a)} />) : <div className="col-span-full border border-dashed border-white/5 p-8 rounded-2xl text-center text-gray-500 font-mono text-xs">Žádné světové zprávy.</div>}
@@ -322,7 +322,7 @@ URL: ${article.url}
               <button
                 onClick={() => fetchNewsWithAI(isSearching ? searchQuery : undefined, true)}
                 disabled={isLoading}
-                className="bg-[#1a1a1a] hover:bg-[#252525] border border-white/10 text-white px-8 py-3 rounded-xl font-bold uppercase text-xs tracking-widest flex items-center gap-2 transition-all disabled:opacity-50"
+                className="bg-gray-900 dark:bg-[#1a1a1a] hover:bg-black dark:hover:bg-[#252525] border border-gray-200 dark:border-white/10 text-white px-8 py-3 rounded-xl font-bold uppercase text-xs tracking-widest flex items-center gap-2 transition-all disabled:opacity-50"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-amber-500" /> : <Plus className="w-4 h-4 text-amber-500" />}
                 Načíst další zprávy
@@ -337,25 +337,25 @@ URL: ${article.url}
       {selectedArticle && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={() => setSelectedArticle(null)}></div>
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-[2rem] w-full max-w-2xl max-h-[85vh] overflow-hidden relative z-10 flex flex-col shadow-2xl animate-fade-in-up">
+          <div className="bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 rounded-[2rem] w-full max-w-2xl max-h-[85vh] overflow-hidden relative z-10 flex flex-col shadow-2xl animate-fade-in-up">
 
             {/* Header */}
             <div className="p-8 pb-0 flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-xs bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full border border-amber-500/20 font-mono uppercase font-bold tracking-widest">{selectedArticle.category}</span>
-                  <span className="text-xs text-gray-500 font-mono uppercase tracking-widest border-l border-white/10 pl-3">{selectedArticle.date}</span>
+                  <span className="text-xs text-gray-500 font-mono uppercase tracking-widest border-l border-gray-200 dark:border-white/10 pl-3">{selectedArticle.date}</span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-display text-white uppercase tracking-tight leading-none mb-2">{selectedArticle.title}</h2>
+                <h2 className="text-2xl md:text-3xl font-display text-gray-900 dark:text-white uppercase tracking-tight leading-none mb-2">{selectedArticle.title}</h2>
               </div>
-              <button onClick={() => setSelectedArticle(null)} className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors border border-white/5">
-                <ArrowRight className="w-5 h-5 text-gray-400 rotate-45" />
+              <button onClick={() => setSelectedArticle(null)} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 flex items-center justify-center transition-colors border border-gray-200 dark:border-white/5">
+                <ArrowRight className="w-5 h-5 text-gray-500 dark:text-gray-400 rotate-45" />
               </button>
             </div>
 
             {/* Content Area */}
             <div className="p-8 overflow-y-auto custom-scrollbar flex-grow min-h-[300px]">
-              <p className="text-lg text-gray-300 leading-relaxed font-light mb-8 italic border-l-2 border-amber-500/50 pl-4">
+              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-light mb-8 italic border-l-2 border-amber-500/50 pl-4">
                 {selectedArticle.description}
               </p>
 
@@ -378,16 +378,16 @@ URL: ${article.url}
                   <button onClick={() => fetchArticleDetail(selectedArticle)} className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-colors">Zkusit znovu</button>
                 </div>
               ) : selectedArticle.full_content ? (
-                <div className="prose prose-invert prose-amber max-w-none">
+                <div className="prose dark:prose-invert prose-amber max-w-none">
                   {/* Smartly render text with simple formatting */}
                   {selectedArticle.full_content.split('\n').map((paragraph, i) => {
                     const trimmed = paragraph.trim();
                     if (!trimmed) return null;
                     // Bold detection for headers
                     if (trimmed.startsWith('**') || trimmed.includes(':')) {
-                      return <p key={i} className="text-gray-200 leading-relaxed text-base mb-4 font-bold text-amber-100/90">{trimmed.replace(/\*\*/g, '')}</p>
+                      return <p key={i} className="text-gray-900 dark:text-gray-200 leading-relaxed text-base mb-4 font-bold text-amber-600/90 dark:text-amber-100/90">{trimmed.replace(/\*\*/g, '')}</p>
                     }
-                    return <p key={i} className="text-gray-400 leading-relaxed text-base mb-4">{trimmed}</p>
+                    return <p key={i} className="text-gray-700 dark:text-gray-400 leading-relaxed text-base mb-4">{trimmed}</p>
                   })
                   }
                 </div>
@@ -400,7 +400,7 @@ URL: ${article.url}
                         <Sparkles className="w-5 h-5 animate-pulse" />
                         <span className="font-bold tracking-widest uppercase text-sm">Spustit AI Analýzu</span>
                       </span>
-                      <span className="pl-6 text-gray-400 font-mono text-xs group-hover:text-amber-200 transition-colors">
+                      <span className="pl-6 text-gray-500 dark:text-gray-400 font-mono text-xs group-hover:text-amber-300 dark:group-hover:text-amber-200 transition-colors">
                         Vygenerovat hloubkový report
                       </span>
                     </button>
@@ -413,12 +413,12 @@ URL: ${article.url}
             </div>
 
             {/* Footer */}
-            <div className="p-6 border-t border-white/5 bg-white/[0.02] flex items-center justify-between">
+            <div className="p-6 border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-white/[0.02] flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs text-gray-500 font-mono uppercase tracking-widest">
                 <Flag className="w-4 h-4 text-amber-500" />
                 {selectedArticle.source}
               </div>
-              <a href={selectedArticle.url} target="_blank" rel="noreferrer" className="bg-white text-black px-6 py-2 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-amber-400 transition-colors flex items-center gap-2">
+              <a href={selectedArticle.url} target="_blank" rel="noreferrer" className="bg-gray-900 dark:bg-white text-white dark:text-black px-6 py-2 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-black dark:hover:bg-amber-400 transition-colors flex items-center gap-2">
                 Přečíst originál <ExternalLink className="w-3 h-3" />
               </a>
             </div>
@@ -430,17 +430,17 @@ URL: ${article.url}
 };
 
 const ArticleCard: React.FC<{ article: Article, idx: number, onClick: () => void }> = ({ article, idx, onClick }) => (
-  <div onClick={onClick} className="group relative flex flex-col bg-[#0a0a0a]/60 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden hover:border-amber-500/40 transition-all duration-500 shadow-2xl cursor-pointer hover:-translate-y-1" style={{ animationDelay: `${idx * 100}ms` }}>
+  <div onClick={onClick} className="group relative flex flex-col bg-white dark:bg-[#0a0a0a]/60 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-3xl overflow-hidden hover:border-amber-500/40 transition-all duration-500 shadow-2xl cursor-pointer hover:-translate-y-1" style={{ animationDelay: `${idx * 100}ms` }}>
     <div className="p-8 flex flex-col h-full">
       <div className="flex items-center justify-between mb-6">
         <span className="text-xs text-gray-500 font-mono uppercase tracking-widest">{article.date || 'DNES'}</span>
         <span className="text-xs bg-amber-500/10 text-amber-400 px-2 py-1 rounded border border-amber-500/20 font-mono uppercase font-bold tracking-tighter">{article.category}</span>
       </div>
-      <h3 className="text-lg font-bold text-white mb-4 font-display uppercase tracking-tight leading-tight group-hover:text-amber-400 transition-colors line-clamp-3">{article.title}</h3>
-      <p className="text-sm text-gray-400 leading-relaxed font-light mb-8 line-clamp-3 group-hover:text-gray-300 transition-colors">{article.description}</p>
-      <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
-        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2 truncate max-w-[150px]"><Flag className="w-3 h-3 text-amber-500" /> {article.source}</div>
-        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 group-hover:text-white group-hover:bg-amber-500 group-hover:border-amber-500 transition-all shadow-inner"><ArrowRight className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" /></div>
+      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 font-display uppercase tracking-tight leading-tight group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-3">{article.title}</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-light mb-8 line-clamp-3 group-hover:text-gray-800 dark:group-hover:text-gray-300 transition-colors">{article.description}</p>
+      <div className="mt-auto pt-6 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
+        <div className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest flex items-center gap-2 truncate max-w-[150px]"><Flag className="w-3 h-3 text-amber-500" /> {article.source}</div>
+        <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-gray-500 group-hover:text-white group-hover:bg-amber-500 group-hover:border-amber-500 transition-all shadow-inner"><ArrowRight className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" /></div>
       </div>
     </div>
   </div>

@@ -38,10 +38,10 @@ const QuizScreen: React.FC<Props> = ({
         {/* Back Button */}
         <button
           onClick={onBackToMenu}
-          className="group flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
+          className="group flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10 hover:border-gray-300 dark:hover:border-white/20 transition-all active:scale-95"
         >
-          <Home className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
-          <span className="text-xs font-bold text-gray-400 group-hover:text-white uppercase tracking-widest transition-colors hidden sm:inline-block">Menu</span>
+          <Home className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors" />
+          <span className="text-xs font-bold text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white uppercase tracking-widest transition-colors hidden sm:inline-block">Menu</span>
         </button>
 
         <div className="flex items-center gap-4">
@@ -63,7 +63,7 @@ const QuizScreen: React.FC<Props> = ({
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-blue-600/0 rounded-[2.5rem] opacity-60 blur-md"></div>
 
         {/* Main Glass Card */}
-        <div className="glass-panel p-6 md:p-16 rounded-[2.5rem] relative overflow-hidden border border-white/10 bg-[#050505]/90 backdrop-blur-3xl shadow-2xl">
+        <div className="glass-panel p-6 md:p-16 rounded-[2.5rem] relative overflow-hidden border border-gray-200 dark:border-white/10 bg-white/80 dark:bg-[#050505]/90 backdrop-blur-3xl shadow-2xl">
 
           {/* Top Decorative Line */}
           <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent"></div>
@@ -72,7 +72,7 @@ const QuizScreen: React.FC<Props> = ({
           <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none"></div>
 
           {/* Progress Line */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-white/5">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gray-100 dark:bg-white/5">
             <div
               className="h-full bg-gradient-to-r from-cyan-500 to-blue-600 shadow-[0_0_20px_rgba(6,182,212,0.8)] transition-all duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)]"
               style={{ width: `${progress}%` }}
@@ -84,7 +84,7 @@ const QuizScreen: React.FC<Props> = ({
           <div key={currentQuestionIndex} className="relative z-10 animate-fade-in-up">
             <div className="mb-10 md:mb-14">
               <span className="text-cyan-500 text-xs md:text-sm font-bold tracking-[0.3em] uppercase mb-4 md:mb-6 block opacity-80 font-mono">Otázka {currentQuestionIndex + 1}</span>
-              <h2 className="text-2xl md:text-4xl font-display text-white leading-tight drop-shadow-xl uppercase tracking-wide">
+              <h2 className="text-2xl md:text-4xl font-display text-gray-900 dark:text-white leading-tight drop-shadow-xl uppercase tracking-wide">
                 {question.question}
               </h2>
             </div>
@@ -105,14 +105,14 @@ const QuizScreen: React.FC<Props> = ({
                     iconClass += "text-red-400 scale-110";
                     textClass += "text-red-100";
                   } else {
-                    containerClass += "bg-transparent border-white/5 opacity-30 blur-[1px] scale-[0.98]";
-                    iconClass += "text-gray-800";
-                    textClass += "text-gray-600";
+                    containerClass += "bg-transparent border-gray-200 dark:border-white/5 opacity-30 blur-[1px] scale-[0.98]";
+                    iconClass += "text-gray-800 dark:text-gray-800";
+                    textClass += "text-gray-600 dark:text-gray-600";
                   }
                 } else {
-                  containerClass += "bg-white/[0.02] border-white/10 hover:bg-white/[0.06] hover:border-cyan-500/30 hover:shadow-[0_4px_20px_rgba(0,0,0,0.4)] active:scale-[0.99]";
-                  iconClass += "text-gray-600 group-hover:text-cyan-400 group-hover:scale-110";
-                  textClass += "text-gray-300 group-hover:text-white";
+                  containerClass += "bg-white/50 dark:bg-white/[0.02] border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] hover:border-cyan-500/30 hover:shadow-[0_4px_20px_rgba(0,0,0,0.1)] active:scale-[0.99]";
+                  iconClass += "text-gray-400 dark:text-gray-600 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 group-hover:scale-110";
+                  textClass += "text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white";
                 }
 
                 return (
@@ -140,7 +140,7 @@ const QuizScreen: React.FC<Props> = ({
                 <div className="flex justify-center">
                   <button
                     onClick={onToggleHint}
-                    className="flex items-center gap-3 text-gray-500 hover:text-cyan-400 transition-all text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase group font-mono py-4 px-6 rounded-full hover:bg-white/5 border border-transparent hover:border-white/5"
+                    className="flex items-center gap-3 text-gray-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-all text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase group font-mono py-4 px-6 rounded-full hover:bg-gray-100 dark:hover:bg-white/5 border border-transparent hover:border-gray-200 dark:hover:border-white/5"
                   >
                     <HelpCircle className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                     {showHint ? "Skrýt nápovědu" : "Zobrazit nápovědu"}
@@ -149,7 +149,7 @@ const QuizScreen: React.FC<Props> = ({
               )}
 
               {showHint && !isAnswered && (
-                <div className="mt-6 p-6 md:p-8 bg-blue-950/20 border border-blue-500/20 rounded-2xl text-blue-200 text-base md:text-lg flex gap-5 animate-fade-in-up items-start backdrop-blur-sm">
+                <div className="mt-6 p-6 md:p-8 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-500/20 rounded-2xl text-blue-900 dark:text-blue-200 text-base md:text-lg flex gap-5 animate-fade-in-up items-start backdrop-blur-sm">
                   <div className="p-2 bg-blue-500/10 rounded-lg">
                     <AlertCircle className="w-6 h-6 text-blue-400" />
                   </div>
@@ -161,8 +161,8 @@ const QuizScreen: React.FC<Props> = ({
               )}
 
               {isAnswered && (
-                <div className="animate-fade-in-up mt-8 border-t border-white/5 pt-8">
-                  <div className={`p-8 rounded-3xl border mb-8 ${selectedAnswer === question.correctAnswer ? 'bg-emerald-950/20 border-emerald-500/20' : 'bg-red-950/20 border-red-500/20'}`}>
+                <div className="animate-fade-in-up mt-8 border-t border-gray-200 dark:border-white/5 pt-8">
+                  <div className={`p-8 rounded-3xl border mb-8 ${selectedAnswer === question.correctAnswer ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-500/20' : 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-500/20'}`}>
                     <div className="flex flex-col md:flex-row gap-6 items-start">
                       <div className={`p-4 rounded-2xl flex-shrink-0 ${selectedAnswer === question.correctAnswer ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
                         {selectedAnswer === question.correctAnswer ? <ZoomInCheck /> : <AlertOctagonIcon />}
@@ -175,7 +175,7 @@ const QuizScreen: React.FC<Props> = ({
                           {question.hint}
                           {/* Here we could add more educational content if available in data type */}
                         </p>
-                        <div className="mt-4 pt-4 border-t border-white/5 flex gap-4 text-xs font-mono text-gray-500 uppercase tracking-widest">
+                        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-white/5 flex gap-4 text-xs font-mono text-gray-500 uppercase tracking-widest">
                           <span>#KyberBezpečnost</span>
                           <span>#Vzdělávání</span>
                         </div>
@@ -186,7 +186,7 @@ const QuizScreen: React.FC<Props> = ({
                   <div className="flex justify-end">
                     <button
                       onClick={onNextQuestion}
-                      className="group relative inline-flex items-center justify-center px-10 py-5 font-bold text-white transition-all duration-200 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 rounded-2xl w-full md:w-auto overflow-hidden"
+                      className="group relative inline-flex items-center justify-center px-10 py-5 font-bold text-white transition-all duration-200 bg-gray-900 dark:bg-white/5 border border-transparent dark:border-white/10 hover:bg-black dark:hover:bg-white/10 hover:border-gray-800 dark:hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 rounded-2xl w-full md:w-auto overflow-hidden"
                     >
                       <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
                       <span className="relative flex items-center gap-3 uppercase tracking-widest text-sm">

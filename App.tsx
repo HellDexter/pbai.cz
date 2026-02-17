@@ -18,6 +18,8 @@ import CyberNews from './components/CyberNews';
 import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
 import { supabase } from './supabaseClient';
+import { ThemeProvider } from './context/ThemeContext';
+import ThemeToggle from './components/ThemeToggle';
 
 type View = 'login' | 'dashboard' | 'cyber_menu' | 'ai_menu' | 'quizzes' | 'presentations' | 'presentation_detail' | 'practical_exercises' | 'videos' | 'quiz' | 'result' | 'security_scanner' | 'cyber_news';
 type Module = 'cyber' | 'ai';
@@ -183,7 +185,7 @@ const App: React.FC = () => {
 
   if (authStatus === 'initializing' || authStatus === 'syncing') {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-screen bg-gray-50 dark:bg-[#050505] flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
         <div className="flex flex-col items-center gap-6 z-10">
           <div className="relative w-16 h-16">
@@ -207,7 +209,7 @@ const App: React.FC = () => {
     case 'cyber_menu': content = <CyberMenu onNavigate={(v) => setCurrentView(v)} onBack={() => setCurrentView('dashboard')} onSelectPresentation={startPresentation} />; break;
     case 'ai_menu': content = <AiMenu onNavigate={(v) => setCurrentView(v)} onBack={() => setCurrentView('dashboard')} />; break;
     case 'quizzes': content = <WelcomeScreen blocks={currentModuleData} onStartBlock={startBlock} onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} theme={activeModule === 'cyber' ? 'emerald' : 'purple'} />; break;
-    case 'presentations': content = <PresentationScreen blocks={currentModuleData} onSelectBlock={startPresentation} onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} theme={activeModule === 'cyber' ? 'cyan' : 'purple'} />; break;
+    case 'presentations': content = <PresentationScreen blocks={currentModuleData} onSelectBlock={startPresentation} onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} />; break;
     case 'presentation_detail':
       const pBlock = currentModuleData.find(b => b.id === selectedPresentationId);
       if (pBlock) {
@@ -215,7 +217,7 @@ const App: React.FC = () => {
       }
       break;
     case 'practical_exercises': content = <AuditScreen onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} />; break;
-    case 'videos': content = <VideoScreen videos={currentVideos} onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} theme={activeModule === 'cyber' ? 'emerald' : 'purple'} />; break;
+    case 'videos': content = <VideoScreen onBack={() => setCurrentView(activeModule === 'cyber' ? 'cyber_menu' : 'ai_menu')} />; break;
     case 'security_scanner': content = <SecurityScanner onBack={() => setCurrentView('cyber_menu')} />; break;
     case 'cyber_news': content = <CyberNews onBack={() => setCurrentView('cyber_menu')} />; break;
     case 'quiz':
@@ -254,13 +256,18 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-[#050505] overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200 font-inter flex flex-col">
-      <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none fixed"></div>
-      <GridBeams />
-      <div className="relative z-10 w-full flex-grow">{content}</div>
-      <div className="relative z-20"><Footer /></div>
-      <CookieConsent />
-    </div>
+    <ThemeProvider>
+      <div className="relative min-h-screen w-full bg-gray-50 dark:bg-[#050505] text-gray-900 dark:text-gray-100 overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-800 dark:selection:text-cyan-200 font-inter flex flex-col transition-colors duration-300">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-30 pointer-events-none fixed"></div>
+        <div className="fixed top-4 right-4 z-50">
+          <ThemeToggle />
+        </div>
+        <GridBeams />
+        <div className="relative z-10 w-full flex-grow">{content}</div>
+        <div className="relative z-20"><Footer /></div>
+        <CookieConsent />
+      </div>
+    </ThemeProvider>
   );
 };
 

@@ -409,29 +409,29 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 pb-32">
       {/* HEADER & EXPLANATION */}
-      <div className="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-8 mb-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 animate-fade-in-up">
+      <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-white/10 rounded-3xl p-6 md:p-8 mb-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 animate-fade-in-up">
         <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500"></div>
 
         <div className="flex-1">
-          <h1 className="text-2xl font-display text-white uppercase tracking-tight mb-3 flex items-center gap-3">
+          <h1 className="text-2xl font-display text-gray-900 dark:text-white uppercase tracking-tight mb-3 flex items-center gap-3">
             <ShieldCheck className="w-6 h-6 text-emerald-500" /> Bezpečnostní Audit
           </h1>
-          <div className="space-y-2 text-base text-gray-400 font-light leading-relaxed">
+          <div className="space-y-2 text-base text-gray-600 dark:text-gray-400 font-light leading-relaxed">
             <p>
-              <strong className="text-white">Co to je?</strong> Interaktivní kontrolní seznam (checklist) pro zabezpečení vašich zařízení.
+              <strong className="text-gray-900 dark:text-white">Co to je?</strong> Interaktivní kontrolní seznam (checklist) pro zabezpečení vašich zařízení.
               Projděte bod po bodu a označte ty, které máte splněné.
             </p>
             <p>
-              <strong className="text-white">Proč?</strong> Kybernetická bezpečnost není jednorázová akce, ale proces.
+              <strong className="text-gray-900 dark:text-white">Proč?</strong> Kybernetická bezpečnost není jednorázová akce, ale proces.
               Tento audit vám pomůže nezapomenout na kritická nastavení, která hackeři zneužívají nejčastěji.
             </p>
           </div>
         </div>
 
-        <div className="bg-black/40 border border-white/10 p-5 rounded-2xl text-center min-w-[150px]">
-          <div className={`text-5xl font-bold font-mono tracking-tighter transition-colors mb-1 ${percentage === 100 ? 'text-emerald-400' : 'text-white'}`}>{percentage}%</div>
+        <div className="bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 p-5 rounded-2xl text-center min-w-[150px]">
+          <div className={`text-5xl font-bold font-mono tracking-tighter transition-colors mb-1 ${percentage === 100 ? 'text-emerald-500' : 'text-gray-900 dark:text-white'}`}>{percentage}%</div>
           <div className="text-xs text-gray-500 font-mono uppercase tracking-widest mb-2">Úroveň ochrany</div>
-          <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+          <div className="w-full h-1.5 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
             <div className={`h-full transition-all duration-1000 ${percentage === 100 ? 'bg-emerald-500' : 'bg-gradient-to-r from-pink-600 to-rose-600'}`} style={{ width: `${percentage}%` }}></div>
           </div>
         </div>
@@ -443,26 +443,26 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
             {/* SECTION HEADER */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-white/5 pb-4">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-black border border-white/10 flex items-center justify-center text-pink-500 shadow-lg">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-800 dark:to-black border border-pink-200 dark:border-white/10 flex items-center justify-center text-pink-600 dark:text-pink-500 shadow-lg">
                   <section.icon className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-display text-white uppercase tracking-wider">{section.title}</h2>
-                  <p className="text-sm text-gray-500 font-mono uppercase tracking-widest">{section.description}</p>
+                  <h2 className="text-xl font-display text-gray-900 dark:text-white uppercase tracking-wider">{section.title}</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-500 font-mono uppercase tracking-widest">{section.description}</p>
                 </div>
               </div>
 
               {/* PLATFORM TOGGLES */}
               {section.platformType === 'desktop' && (
-                <div className="flex bg-black/40 p-1 rounded-lg border border-white/10">
-                  <button onClick={() => setDesktopOS('Windows')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${desktopOS === 'Windows' ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}>Windows</button>
-                  <button onClick={() => setDesktopOS('macOS')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${desktopOS === 'macOS' ? 'bg-gray-200 text-black shadow-lg' : 'text-gray-500 hover:text-white'}`}>macOS</button>
+                <div className="flex bg-gray-100 dark:bg-black/40 p-1 rounded-lg border border-gray-200 dark:border-white/10">
+                  <button onClick={() => setDesktopOS('Windows')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${desktopOS === 'Windows' ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Windows</button>
+                  <button onClick={() => setDesktopOS('macOS')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${desktopOS === 'macOS' ? 'bg-gray-200 text-black shadow-lg dark:bg-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>macOS</button>
                 </div>
               )}
               {section.platformType === 'mobile' && (
-                <div className="flex bg-black/40 p-1 rounded-lg border border-white/10">
-                  <button onClick={() => setMobileOS('Android')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${mobileOS === 'Android' ? 'bg-emerald-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}>Android</button>
-                  <button onClick={() => setMobileOS('iOS')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${mobileOS === 'iOS' ? 'bg-white text-black shadow-lg' : 'text-gray-500 hover:text-white'}`}>iPhone</button>
+                <div className="flex bg-gray-100 dark:bg-black/40 p-1 rounded-lg border border-gray-200 dark:border-white/10">
+                  <button onClick={() => setMobileOS('Android')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${mobileOS === 'Android' ? 'bg-emerald-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Android</button>
+                  <button onClick={() => setMobileOS('iOS')} className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all ${mobileOS === 'iOS' ? 'bg-white text-black shadow-lg' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>iPhone</button>
                 </div>
               )}
             </div>
@@ -485,7 +485,7 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
                   <div
                     key={item.id}
                     onClick={() => setExpandedItems(prev => ({ ...prev, [item.id]: !prev[item.id] }))}
-                    className={`group border rounded-2xl transition-all duration-300 overflow-hidden relative ${isExpanded ? 'bg-[#151515] border-pink-500/20 shadow-xl' : 'bg-[#0a0a0a]/40 border-white/5 hover:bg-[#111] hover:border-white/10'}`}
+                    className={`group border rounded-2xl transition-all duration-300 overflow-hidden relative ${isExpanded ? 'bg-white dark:bg-[#151515] border-pink-500 shadow-xl ring-2 ring-pink-500/10' : 'bg-white/60 dark:bg-[#0a0a0a]/40 border-gray-200 dark:border-white/5 hover:bg-white dark:hover:bg-[#111] hover:border-gray-300 dark:hover:border-white/10'}`}
                   >
                     {/* Collapsed Header */}
                     <div className="p-4 flex items-center gap-4 relative z-10">
@@ -498,11 +498,11 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
 
                       <div className="flex-grow min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <h3 className={`text-lg font-bold transition-all truncate ${isChecked ? 'text-gray-500 line-through' : 'text-white'}`}>
+                          <h3 className={`text-lg font-bold transition-all truncate ${isChecked ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-900 dark:text-white'}`}>
                             {item.label}
                           </h3>
                         </div>
-                        <p className={`text-sm text-gray-400 transition-opacity truncate ${isExpanded ? 'opacity-0 h-0 hidden' : 'opacity-100'}`}>
+                        <p className={`text-sm text-gray-500 dark:text-gray-400 transition-opacity truncate ${isExpanded ? 'opacity-0 h-0 hidden' : 'opacity-100'}`}>
                           {item.shortDesc}
                         </p>
                       </div>
@@ -521,40 +521,40 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
 
                     {/* Expanded Body */}
                     {isExpanded && (
-                      <div className="px-4 pb-6 pt-0 border-t border-white/5 bg-[#0e0e0e] animate-fade-in-up">
+                      <div className="px-4 pb-6 pt-0 border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-[#0e0e0e] animate-fade-in-up">
                         <div className="grid md:grid-cols-2 gap-4 mt-6">
 
                           {/* Info Column */}
                           <div className="space-y-4">
-                            <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-4">
-                              <h4 className="flex items-center gap-2 text-emerald-500 text-sm font-bold uppercase tracking-widest mb-2">
+                            <div className="bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/10 rounded-xl p-4">
+                              <h4 className="flex items-center gap-2 text-emerald-600 dark:text-emerald-500 text-sm font-bold uppercase tracking-widest mb-2">
                                 <Info className="w-4 h-4" /> Význam
                               </h4>
-                              <p className="text-gray-300 text-sm leading-relaxed">{item.significance}</p>
+                              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{item.significance}</p>
                             </div>
-                            <div className="bg-rose-500/5 border border-rose-500/10 rounded-xl p-4">
-                              <h4 className="flex items-center gap-2 text-rose-500 text-sm font-bold uppercase tracking-widest mb-2">
+                            <div className="bg-rose-50 dark:bg-rose-500/5 border border-rose-200 dark:border-rose-500/10 rounded-xl p-4">
+                              <h4 className="flex items-center gap-2 text-rose-600 dark:text-rose-500 text-sm font-bold uppercase tracking-widest mb-2">
                                 <AlertTriangle className="w-4 h-4" /> Riziko
                               </h4>
-                              <p className="text-gray-300 text-sm leading-relaxed">{item.risk}</p>
+                              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{item.risk}</p>
                             </div>
                           </div>
 
                           {/* How-To Column */}
-                          <div className="bg-[#050505] rounded-xl border border-white/10 p-5 relative">
+                          <div className="bg-white dark:bg-[#050505] rounded-xl border border-gray-200 dark:border-white/10 p-5 relative shadow-sm">
                             {/* Small Badge for Current OS */}
-                            <div className="absolute top-3 right-3 text-xs uppercase font-bold text-gray-600 border border-white/5 px-2 py-0.5 rounded bg-white/5">
+                            <div className="absolute top-3 right-3 text-xs uppercase font-bold text-gray-500 dark:text-gray-600 border border-gray-100 dark:border-white/5 px-2 py-0.5 rounded bg-gray-50 dark:bg-white/5">
                               {section.platformType === 'desktop' ? desktopOS : section.platformType === 'mobile' ? mobileOS : 'General'}
                             </div>
 
-                            <h4 className="flex items-center gap-2 text-white text-sm font-bold uppercase tracking-widest mb-4 border-b border-white/10 pb-2">
+                            <h4 className="flex items-center gap-2 text-gray-900 dark:text-white text-sm font-bold uppercase tracking-widest mb-4 border-b border-gray-100 dark:border-white/10 pb-2">
                               <Settings className="w-4 h-4 text-pink-500" /> Jak nastavit
                             </h4>
                             <div className="space-y-3">
                               {currentInstructions?.map((step, i) => (
                                 <div key={i} className="flex gap-3 items-start">
                                   <span className="text-pink-500 font-mono text-sm font-bold mt-0.5">{i + 1}.</span>
-                                  <p className="text-gray-400 text-sm leading-relaxed">{step}</p>
+                                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{step}</p>
                                 </div>
                               ))}
                             </div>
@@ -581,30 +581,30 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
       {/* AI CHAT MODAL refined */}
       {showChat && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-6">
-          <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick={() => setShowChat(false)}></div>
-          <div className="relative w-full max-w-2xl h-full md:h-[80vh] bg-[#111] border border-white/10 md:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-fade-in-up">
-            <div className="p-4 border-b border-white/5 flex items-center justify-between bg-[#0a0a0a]">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={() => setShowChat(false)}></div>
+          <div className="relative w-full max-w-2xl h-full md:h-[80vh] bg-white dark:bg-[#111] border border-gray-200 dark:border-white/10 md:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-fade-in-up">
+            <div className="p-4 border-b border-gray-100 dark:border-white/5 flex items-center justify-between bg-gray-50 dark:bg-[#0a0a0a]">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-pink-600/20 flex items-center justify-center">
                   <Bot className="w-4 h-4 text-pink-500" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-widest">AI Konzultant</h3>
-                  <p className="text-xs text-gray-500 truncate max-w-[150px]">{activeItem?.label}</p>
+                  <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest">AI Konzultant</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-500 truncate max-w-[150px]">{activeItem?.label}</p>
                 </div>
               </div>
               <button onClick={() => setShowChat(false)} className="text-gray-500 hover:text-white bg-white/5 p-2 rounded-full hover:bg-rose-500 transition-colors"><X className="w-4 h-4" /></button>
             </div>
 
-            <div className="flex-grow overflow-y-auto p-6 space-y-6 bg-[#0e0e0e]">
+            <div className="flex-grow overflow-y-auto p-6 space-y-6 bg-white dark:bg-[#0e0e0e]">
               {/* Intro Screen if history is empty */}
               {chatHistory.length === 0 && !loading && !needsKey && (
                 <div className="flex flex-col items-center justify-center h-full text-center p-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-pink-500/20">
                     <Bot className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">Potřebujete pomoci s nastavením?</h3>
-                  <p className="text-gray-400 text-sm max-w-sm mb-8 leading-relaxed">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Potřebujete pomoci s nastavením?</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm max-w-sm mb-8 leading-relaxed">
                     Jsem váš AI bezpečnostní asistent. Mohu vás provést nastavením
                     bodu <strong>"{activeItem?.label}"</strong> krok za krokem, přímo pro vaše zařízení.
                   </p>
@@ -612,14 +612,14 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
                   <div className="w-full max-w-xs space-y-3">
                     <button
                       onClick={() => submitMessage(`Jak nastavit ${activeItem?.label} na mém zařízení?`)}
-                      className="w-full py-3 px-4 bg-[#1a1a1a] border border-white/10 hover:border-pink-500/50 hover:bg-[#222] rounded-xl text-sm text-gray-300 hover:text-white transition-all text-left flex items-center justify-between group"
+                      className="w-full py-3 px-4 bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 hover:border-pink-500/50 hover:bg-gray-100 dark:hover:bg-[#222] rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all text-left flex items-center justify-between group"
                     >
                       <span>🚀 Jak to mám nastavit?</span>
                       <ArrowRight className="w-3 h-3 text-pink-500 group-hover:translate-x-1 transition-transform" />
                     </button>
                     <button
                       onClick={() => submitMessage(activeItem?.aiPrompt || "Mám dotaz.")}
-                      className="w-full py-3 px-4 bg-[#1a1a1a] border border-white/10 hover:border-pink-500/50 hover:bg-[#222] rounded-xl text-sm text-gray-300 hover:text-white transition-all text-left flex items-center justify-between group"
+                      className="w-full py-3 px-4 bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 hover:border-pink-500/50 hover:bg-gray-100 dark:hover:bg-[#222] rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all text-left flex items-center justify-between group"
                     >
                       <span>💡 {activeItem?.aiPrompt}</span>
                       <ArrowRight className="w-3 h-3 text-pink-500 group-hover:translate-x-1 transition-transform" />
@@ -630,21 +630,21 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
 
               {!needsKey ? chatHistory.map((msg, idx) => (
                 <div key={idx} className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''} animate-fade-in`}>
-                  <div className={`p-4 rounded-2xl text-sm leading-relaxed max-w-[85%] shadow-md ${msg.role === 'model' ? 'bg-[#1a1a1a] text-gray-300 border border-white/5' : 'bg-pink-600 text-white'}`}>
+                  <div className={`p-4 rounded-2xl text-sm leading-relaxed max-w-[85%] shadow-md ${msg.role === 'model' ? 'bg-gray-100 dark:bg-[#1a1a1a] text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-white/5' : 'bg-pink-600 text-white'}`}>
                     <div dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }}></div>
                   </div>
                 </div>
               )) : (
                 <div className="text-center p-10 flex flex-col items-center justify-center h-full">
                   <Key className="w-12 h-12 text-amber-500 mb-4" />
-                  <h3 className="text-white font-bold text-sm mb-2">Vyžadován API klíč</h3>
+                  <h3 className="text-gray-900 dark:text-white font-bold text-sm mb-2">Vyžadován API klíč</h3>
                   <p className="text-gray-500 text-xs mb-6 max-w-[200px]">Pro využití AI asistenta je potřeba propojit aplikaci.</p>
-                  <button onClick={handleOpenKeyDialog} className="bg-white text-black px-6 py-2 rounded-xl text-xs font-bold uppercase hover:bg-amber-100 shadow-lg">Připojit klíč</button>
+                  <button onClick={handleOpenKeyDialog} className="bg-gray-900 dark:bg-white text-white dark:text-black px-6 py-2 rounded-xl text-xs font-bold uppercase hover:bg-black dark:hover:bg-amber-100 shadow-lg">Připojit klíč</button>
                 </div>
               )}
               {loading && (
                 <div className="flex justify-start">
-                  <div className="bg-[#1a1a1a] border border-white/5 px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-2">
+                  <div className="bg-gray-100 dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/5 px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-2">
                     <Loader2 className="w-4 h-4 text-pink-500 animate-spin" />
                     <span className="text-xs text-gray-500">Analyzuji váš dotaz...</span>
                   </div>
@@ -653,11 +653,11 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
               <div ref={chatEndRef} />
             </div>
             {!needsKey && (
-              <div className="p-4 bg-[#0a0a0a] border-t border-white/5">
+              <div className="p-4 bg-gray-50 dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-white/5">
                 {selectedImage && (
-                  <div className="mb-3 flex items-center gap-2 bg-[#1a1a1a] p-2 rounded-lg w-fit border border-white/10 animate-fade-in-up">
-                    <img src={selectedImage} alt="Preview" className="h-12 w-auto rounded-md object-cover border border-white/5" />
-                    <button onClick={clearImage} className="p-1 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white">
+                  <div className="mb-3 flex items-center gap-2 bg-gray-100 dark:bg-[#1a1a1a] p-2 rounded-lg w-fit border border-gray-200 dark:border-white/10 animate-fade-in-up">
+                    <img src={selectedImage} alt="Preview" className="h-12 w-auto rounded-md object-cover border border-gray-200 dark:border-white/5" />
+                    <button onClick={clearImage} className="p-1 hover:bg-gray-200 dark:hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-gray-900 dark:hover:text-white">
                       <X className="w-3 h-3" />
                     </button>
                     <span className="text-xs text-gray-500 pr-2">Snímek obrazovky</span>
@@ -674,7 +674,7 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-3 bg-[#151515] border border-white/10 rounded-xl text-gray-400 hover:text-white hover:bg-[#222] transition-colors"
+                    className="p-3 bg-white dark:bg-[#151515] border border-gray-200 dark:border-white/10 rounded-xl text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-[#222] transition-colors"
                     title="Nahrát obrázek"
                   >
                     <Paperclip className="w-5 h-5" />
@@ -684,7 +684,7 @@ const AuditScreen: React.FC<Props> = ({ onBack }) => {
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
                       placeholder={selectedImage ? "Přidejte komentář k obrázku..." : "Zeptejte se nebo vložte screenshot..."}
-                      className="w-full bg-[#151515] border border-white/10 rounded-xl pl-4 pr-12 py-3.5 text-sm text-white focus:border-pink-500/50 outline-none transition-all placeholder:text-gray-600"
+                      className="w-full bg-white dark:bg-[#151515] border border-gray-200 dark:border-white/10 rounded-xl pl-4 pr-12 py-3.5 text-sm text-gray-900 dark:text-white focus:border-pink-500/50 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
                     />
                     <button type="submit" disabled={loading || (!inputMessage.trim() && !selectedImage)} className="absolute right-2 top-2 p-2 bg-pink-600 rounded-lg text-white hover:bg-pink-500 disabled:opacity-50 disabled:bg-gray-800 transition-colors">
                       <Send className="w-4 h-4" />

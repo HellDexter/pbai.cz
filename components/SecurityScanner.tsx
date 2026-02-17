@@ -14,17 +14,17 @@ const SecurityScanner: React.FC<Props> = ({ onBack }) => {
     <div className="max-w-5xl mx-auto px-4 py-6 pb-24">
       <header className="mb-6 animate-fade-in-up flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4 w-full md:w-auto">
-          <div className="p-3 bg-rose-500/10 rounded-2xl border border-rose-500/20 backdrop-blur-sm shadow-[0_0_15px_rgba(244,63,94,0.1)]">
-            <ShieldAlert className="w-8 h-8 text-rose-500" />
+          <div className="p-3 bg-rose-50 dark:bg-rose-500/10 rounded-2xl border border-rose-200 dark:border-rose-500/20 backdrop-blur-sm shadow-[0_0_15px_rgba(244,63,94,0.1)]">
+            <ShieldAlert className="w-8 h-8 text-rose-600 dark:text-rose-500" />
           </div>
           <div>
-            <h1 className="text-2xl font-display text-white uppercase tracking-tight font-bold">Bezpečnostní Lab</h1>
-            <p className="text-gray-400 text-sm font-mono tracking-wide">TOOLS_V2.0 // RISK_ANALYSIS</p>
+            <h1 className="text-2xl font-display text-gray-900 dark:text-white uppercase tracking-tight font-bold">Bezpečnostní Lab</h1>
+            <p className="text-gray-600 dark:text-gray-400 text-sm font-mono tracking-wide">TOOLS_V2.0 // RISK_ANALYSIS</p>
           </div>
         </div>
 
         {/* Navigation Tabs - Compact & Tech style */}
-        <div className="flex bg-black/40 p-1 rounded-xl border border-white/10 backdrop-blur-md w-full md:w-auto overflow-x-auto">
+        <div className="flex bg-gray-100 dark:bg-black/40 p-1 rounded-xl border border-gray-200 dark:border-white/10 backdrop-blur-md w-full md:w-auto overflow-x-auto">
           <TabButton
             active={activeTab === 'pass'}
             onClick={() => setActiveTab('pass')}
@@ -51,7 +51,7 @@ const SecurityScanner: React.FC<Props> = ({ onBack }) => {
         {activeTab === 'pass' && <PasswordAnalyzer />}
         {activeTab === 'url' && <UrlScanner />}
         {activeTab === 'hibp' && (
-          <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl overflow-hidden shadow-2xl relative">
+          <div className="bg-white dark:bg-[#0f0f0f] border border-gray-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-2xl relative">
             <HibpScanner onBack={() => { }} />
           </div>
         )}
@@ -65,7 +65,7 @@ const TabButton = ({ active, onClick, icon: Icon, label }: { active: boolean, on
     onClick={onClick}
     className={`px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${active
       ? 'bg-rose-600 text-white shadow-[0_0_15px_rgba(225,29,72,0.4)]'
-      : 'text-gray-400 hover:text-white hover:bg-white/5'
+      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-white/5'
       }`}
   >
     <Icon className="w-4 h-4" />
@@ -81,7 +81,7 @@ const TechInsight = ({ title, icon: Icon, children }: { title: string, icon: any
     <div className="mt-4 border border-white/5 bg-white/5 rounded-xl overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 dark:hover:bg-white/5 transition-colors"
       >
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400">
           <Icon className="w-3.5 h-3.5" /> {title}
@@ -89,7 +89,7 @@ const TechInsight = ({ title, icon: Icon, children }: { title: string, icon: any
         {isOpen ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
       </button>
       {isOpen && (
-        <div className="px-4 py-3 border-t border-white/5 text-xs text-gray-400 leading-relaxed font-mono space-y-2 bg-black/20">
+        <div className="px-4 py-3 border-t border-gray-200 dark:border-white/5 text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-mono space-y-2 bg-gray-50 dark:bg-black/20">
           {children}
         </div>
       )}
@@ -144,14 +144,14 @@ const PasswordAnalyzer = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       {/* Main Input Card */}
-      <div className="lg:col-span-7 bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-center">
+      <div className="lg:col-span-7 bg-white dark:bg-[#0f0f0f] border border-gray-200 dark:border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-center">
 
         <div className="relative z-10 space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-white mb-2 font-display uppercase tracking-tight flex items-center gap-2">
-              <Lock className="w-5 h-5 text-rose-500" /> Analyzátor Hesel
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 font-display uppercase tracking-tight flex items-center gap-2">
+              <Lock className="w-5 h-5 text-rose-600 dark:text-rose-500" /> Analyzátor Hesel
             </h2>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
               Zadejte heslo a zjistěte jeho entropii (matematickou odolnost). <br />
               <span className="text-gray-500 text-sm flex items-center gap-1 mt-1">
                 <Cpu className="w-4 h-4 text-emerald-500" />
@@ -166,12 +166,12 @@ const PasswordAnalyzer = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Zadejte heslo..."
-              className="w-full bg-black/40 border border-white/10 rounded-xl pl-11 pr-12 py-5 text-lg text-white placeholder-gray-600 focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/20 transition-all font-mono shadow-inner"
+              className="w-full bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-xl pl-11 pr-12 py-5 text-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-600 focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/20 transition-all font-mono shadow-inner"
             />
             <Hash className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
             <button
               onClick={() => setShowPass(!showPass)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white p-2 rounded-lg hover:bg-white/5 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:hover:text-white p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-white/5 transition-colors"
             >
               {showPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -182,7 +182,7 @@ const PasswordAnalyzer = () => {
           </div>
 
           {/* Strength Meter */}
-          <div className={`p-5 rounded-2xl border bg-black/20 backdrop-blur-sm transition-colors duration-500 ${password ? label.border : 'border-white/5'}`}>
+          <div className={`p-5 rounded-2xl border bg-gray-50 dark:bg-black/20 backdrop-blur-sm transition-colors duration-500 ${password ? label.border : 'border-gray-200 dark:border-white/5'}`}>
             <div className="flex justify-between items-end mb-3">
               <div>
                 <span className="text-xs text-gray-500 font-bold uppercase tracking-widest block mb-1">Skóre Bezpečnosti</span>
@@ -190,12 +190,12 @@ const PasswordAnalyzer = () => {
                   {password ? label.text : "Čekám na vstup..."}
                 </span>
               </div>
-              <span className="text-4xl font-mono text-white font-bold tracking-tighter opacity-90">{strength}<span className="text-lg align-top opacity-50">%</span></span>
+              <span className="text-4xl font-mono text-gray-900 dark:text-white font-bold tracking-tighter opacity-90">{strength}<span className="text-lg align-top opacity-50">%</span></span>
             </div>
 
-            <div className="h-2.5 bg-gray-800 rounded-full overflow-hidden">
+            <div className="h-2.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
               <div
-                className={`h-full transition-all duration-1000 ease-out shadow-[0_0_15px_currentColor] ${password ? label.bg : 'bg-gray-800'}`}
+                className={`h-full transition-all duration-1000 ease-out shadow-[0_0_15px_currentColor] ${password ? label.bg : 'bg-gray-300 dark:bg-gray-800'}`}
                 style={{ width: `${strength}%` }}
               ></div>
             </div>
@@ -215,22 +215,22 @@ const PasswordAnalyzer = () => {
       {/* Info & Stats Column */}
       <div className="lg:col-span-5 space-y-4 flex flex-col">
         {/* Crack Time Card */}
-        <div className="bg-[#1a1a1a] border border-white/10 rounded-3xl p-6 relative overflow-hidden flex-1">
+        <div className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-3xl p-6 relative overflow-hidden flex-1">
           <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-50"></div>
           <div className="relative z-10 flex flex-col h-full justify-center">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-rose-400 mb-3 flex items-center gap-2">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400 mb-3 flex items-center gap-2">
               <AlertOctagon className="w-4 h-4" /> Čas prolomení (GPU)
             </h3>
-            <div className="text-3xl font-display text-white font-bold leading-none mb-3 tracking-tight">{crackTime}</div>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <div className="text-3xl font-display text-gray-900 dark:text-white font-bold leading-none mb-3 tracking-tight">{crackTime}</div>
+            <p className="text-sm text-gray-600 dark:text-gray-500 leading-relaxed">
               Odhad pro moderní GPU (RTX 4090) schopnou vyzkoušet miliardy kombinací za sekundu.
             </p>
           </div>
         </div>
 
         {/* Checklist */}
-        <div className="bg-[#1a1a1a] border border-white/10 rounded-3xl p-6">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Analýza znakové sady</h3>
+        <div className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-3xl p-6">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-4">Analýza znakové sady</h3>
           <div className="grid grid-cols-2 gap-y-3 gap-x-4">
             <CheckItem compact checked={password.length >= 12} label="Délka (12+)" />
             <CheckItem compact checked={/[A-Z]/.test(password)} label="Velká písmena" />
@@ -240,10 +240,10 @@ const PasswordAnalyzer = () => {
         </div>
 
         {/* Tip */}
-        <div className="bg-emerald-900/10 border border-emerald-500/10 rounded-3xl p-5 flex items-start gap-3">
-          <Info className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-emerald-400/90 leading-relaxed font-mono">
-            <strong className="text-emerald-400 block mb-1 uppercase tracking-wider text-xs">Tip experta:</strong>
+        <div className="bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-500/10 rounded-3xl p-5 flex items-start gap-3">
+          <Info className="w-5 h-5 text-emerald-600 dark:text-emerald-500 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-emerald-700/90 dark:text-emerald-400/90 leading-relaxed font-mono">
+            <strong className="text-emerald-700 dark:text-emerald-400 block mb-1 uppercase tracking-wider text-xs">Tip experta:</strong>
             Délka je důležitější než složitost. Heslo "KoneZerouSen0!" (Passphrase) je bezpečnější než "tr5&b#x".
           </p>
         </div>
@@ -259,9 +259,9 @@ const CheckItem = ({ checked, label, compact = false }: { checked: boolean, labe
         <CheckCircle className="w-3 h-3 text-emerald-500" />
       </div>
     ) : (
-      <div className="w-4 h-4 rounded-full border border-gray-600 bg-transparent" />
+      <div className="w-4 h-4 rounded-full border border-gray-400 dark:border-gray-600 bg-transparent" />
     )}
-    <span className={`text-[11px] font-bold uppercase tracking-widest ${checked ? 'text-white' : 'text-gray-500'}`}>{label}</span>
+    <span className={`text-[11px] font-bold uppercase tracking-widest ${checked ? 'text-gray-900 dark:text-white' : 'text-gray-500'}`}>{label}</span>
   </div>
 );
 
@@ -298,14 +298,14 @@ const UrlScanner = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       {/* Scanner Card */}
-      <div className="lg:col-span-7 bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-center min-h-[350px]">
+      <div className="lg:col-span-7 bg-white dark:bg-[#0f0f0f] border border-gray-200 dark:border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-center min-h-[350px]">
 
         <div className="relative z-10 w-full space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-white mb-2 font-display uppercase tracking-tight flex items-center gap-2">
-              <Search className="w-5 h-5 text-cyan-500" /> Scanner Odkazů
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 font-display uppercase tracking-tight flex items-center gap-2">
+              <Search className="w-5 h-5 text-cyan-600 dark:text-cyan-500" /> Scanner Odkazů
             </h2>
-            <p className="text-gray-400 text-sm leading-relaxed mb-1">
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-1">
               Vložte odkaz z e-mailu nebo SMS pro detekci phishingu.
             </p>
             <p className="text-gray-500 text-xs flex items-center gap-1">
@@ -323,7 +323,7 @@ const UrlScanner = () => {
                 onChange={(e) => setUrl(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && analyze()}
                 placeholder="Např. http://banka-login.cz..."
-                className="relative w-full bg-black border border-white/10 rounded-xl pl-11 pr-4 py-5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition-all font-mono shadow-inner"
+                className="relative w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl pl-11 pr-4 py-5 text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition-all font-mono shadow-inner"
               />
               <div className="absolute left-4 top-1/2 -translate-y-1/2">
                 <LinkIcon className="w-4 h-4 text-gray-500" />
@@ -333,7 +333,7 @@ const UrlScanner = () => {
             <button
               onClick={analyze}
               disabled={isAnalyzing || !url}
-              className="w-full bg-white text-black py-4 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all disabled:opacity-50 disabled:hover:bg-white disabled:shadow-none flex items-center justify-center gap-2 group"
+              className="w-full bg-gray-900 dark:bg-white text-white dark:text-black py-4 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-black dark:hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all disabled:opacity-50 disabled:hover:bg-gray-900 dark:disabled:hover:bg-white disabled:shadow-none flex items-center justify-center gap-2 group"
             >
               {isAnalyzing ? <RefreshCw className="w-4 h-4 animate-spin" /> : (
                 <>
@@ -360,8 +360,8 @@ const UrlScanner = () => {
       <div className="lg:col-span-5 flex flex-col gap-4">
         {/* Result Card */}
         <div className={`flex-1 rounded-3xl border p-6 transition-all duration-500 relative overflow-hidden flex flex-col justify-center min-h-[160px] ${result
-          ? (result === 'safe' ? 'bg-emerald-900/10 border-emerald-500/20' : 'bg-red-900/10 border-red-500/20')
-          : 'bg-[#1a1a1a] border-white/5'
+          ? (result === 'safe' ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-500/20' : 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-500/20')
+          : 'bg-white dark:bg-[#1a1a1a] border-gray-200 dark:border-white/5'
           }`}>
           {result ? (
             <div className="animate-fade-in-up">
@@ -402,17 +402,17 @@ const UrlScanner = () => {
         </div>
 
         {/* Pro Tip */}
-        <div className="bg-[#1a1a1a] border border-white/10 rounded-3xl p-6">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3 flex items-center gap-2">
+        <div className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-3xl p-6">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-cyan-600 dark:text-cyan-400 mb-3 flex items-center gap-2">
             <HelpCircle className="w-4 h-4" /> Phishing Radar
           </h3>
           <ul className="space-y-3">
-            <li className="flex gap-3 text-xs text-gray-400 leading-relaxed">
-              <span className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center text-[10px] font-bold text-gray-500 flex-shrink-0 border border-white/5">1</span>
+            <li className="flex gap-3 text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+              <span className="w-5 h-5 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-[10px] font-bold text-gray-500 flex-shrink-0 border border-gray-200 dark:border-white/5">1</span>
               <span>Pozor na urgenci. Hackeři chtějí, abyste jednali ve stresu.</span>
             </li>
-            <li className="flex gap-3 text-xs text-gray-400 leading-relaxed">
-              <span className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center text-[10px] font-bold text-gray-500 flex-shrink-0 border border-white/5">2</span>
+            <li className="flex gap-3 text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+              <span className="w-5 h-5 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-[10px] font-bold text-gray-500 flex-shrink-0 border border-gray-200 dark:border-white/5">2</span>
               <span>Kontrolujte doménu. `paypal.com` není to samé jako `paypal-secure.com`.</span>
             </li>
           </ul>

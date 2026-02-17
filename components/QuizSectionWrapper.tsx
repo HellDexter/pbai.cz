@@ -56,33 +56,33 @@ const QuizSectionWrapper: React.FC<Props> = ({ onBack }) => {
                 {/* HEADER DASHBOARD */}
                 <div className="mb-16 grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up">
                     {/* Welcome Card */}
-                    <div className="md:col-span-2 bg-gradient-to-br from-[#0f0f0f] to-[#151515] border border-white/10 rounded-[2.5rem] p-8 md:p-10 relative overflow-hidden group shadow-2xl">
+                    <div className="md:col-span-2 bg-white dark:bg-gradient-to-br dark:from-[#0f0f0f] dark:to-[#151515] border border-gray-200 dark:border-white/10 rounded-[2.5rem] p-8 md:p-10 relative overflow-hidden group shadow-xl dark:shadow-2xl">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-cyan-500/10 transition-all duration-700"></div>
                         <div className="relative z-10">
-                            <h2 className="text-3xl font-display text-white uppercase tracking-tight mb-4 flex items-center gap-3">
-                                <GraduationCap className="w-8 h-8 text-cyan-500" /> Tréninkové Centrum
+                            <h2 className="text-3xl font-display text-gray-900 dark:text-white uppercase tracking-tight mb-4 flex items-center gap-3">
+                                <GraduationCap className="w-8 h-8 text-cyan-600 dark:text-cyan-500" /> Tréninkové Centrum
                             </h2>
-                            <p className="text-gray-400 text-sm leading-relaxed max-w-lg mb-8">
+                            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-lg mb-8">
                                 Otestujte své znalosti v interaktivních scénářích. Každý splněný blok zvyšuje vaše kybernetické skóre.
                                 Chyby nejsou problém – jsou to lekce.
                             </p>
                             <div className="flex items-center gap-4 text-xs font-mono uppercase tracking-widest text-gray-500">
-                                <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-emerald-500" /> {totalQuestions} Otázek celkem</span>
-                                <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
-                                <span className="flex items-center gap-2"><Trophy className="w-4 h-4 text-yellow-500" /> {completedCount} Splněno</span>
+                                <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-500" /> {totalQuestions} Otázek celkem</span>
+                                <span className="w-1 h-1 bg-gray-300 dark:bg-gray-700 rounded-full"></span>
+                                <span className="flex items-center gap-2"><Trophy className="w-4 h-4 text-yellow-600 dark:text-yellow-500" /> {completedCount} Splněno</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Progress Card */}
-                    <div className="bg-[#0f0f0f] border border-white/10 rounded-[2.5rem] p-8 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl group">
+                    <div className="bg-white dark:bg-[#0f0f0f] border border-gray-200 dark:border-white/10 rounded-[2.5rem] p-8 flex flex-col items-center justify-center relative overflow-hidden shadow-xl dark:shadow-2xl group">
                         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-                        <div className={`text-6xl font-bold font-mono mb-2 transition-all duration-500 ${progressPercentage === 100 ? 'text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]' : 'text-white'}`}>
+                        <div className={`text-6xl font-bold font-mono mb-2 transition-all duration-500 ${progressPercentage === 100 ? 'text-emerald-500 dark:text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]' : 'text-gray-900 dark:text-white'}`}>
                             {progressPercentage}%
                         </div>
                         <div className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mb-6">Celkový Progress</div>
 
-                        <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                        <div className="w-full bg-gray-100 dark:bg-white/5 h-2 rounded-full overflow-hidden">
                             <div
                                 className={`h-full transition-all duration-1000 ${progressPercentage === 100 ? 'bg-emerald-500' : 'bg-gradient-to-r from-cyan-500 to-blue-600'}`}
                                 style={{ width: `${progressPercentage}%` }}
@@ -100,8 +100,8 @@ const QuizSectionWrapper: React.FC<Props> = ({ onBack }) => {
                                 key={block.id}
                                 onClick={() => handleSelectBlock(block.id)}
                                 className={`group relative p-8 rounded-[2rem] border text-left transition-all duration-500 hover:-translate-y-2 overflow-hidden flex flex-col justify-between min-h-[220px] ${isCompleted
-                                        ? 'bg-[#0a0a0a] border-emerald-500/30 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]'
-                                        : 'bg-[#0a0a0a] border-white/5 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]'
+                                    ? 'bg-white dark:bg-[#0a0a0a] border-emerald-500/30 hover:shadow-lg dark:hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]'
+                                    : 'bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-white/5 hover:border-cyan-500/30 hover:shadow-lg dark:hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]'
                                     }`}
                                 style={{ animationDelay: `${idx * 50}ms` }}
                             >
@@ -111,31 +111,31 @@ const QuizSectionWrapper: React.FC<Props> = ({ onBack }) => {
                                 <div>
                                     <div className="flex items-center justify-between mb-6">
                                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border transition-all duration-300 ${isCompleted
-                                                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                                                : 'bg-white/5 border-white/10 text-gray-400 group-hover:text-cyan-400 group-hover:bg-cyan-500/10 group-hover:border-cyan-500/20'
+                                            ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                                            : 'bg-gray-50 dark:bg-white/5 border-gray-100 dark:border-white/10 text-gray-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 group-hover:bg-cyan-50 dark:group-hover:bg-cyan-500/10 group-hover:border-cyan-200 dark:group-hover:border-cyan-500/20'
                                             }`}>
                                             {isCompleted ? <CheckMark /> : <BrainCircuit className="w-6 h-6" />}
                                         </div>
                                         {isCompleted && (
-                                            <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-1.5">
+                                            <div className="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest flex items-center gap-1.5">
                                                 <Star className="w-3 h-3 fill-current" /> Hotovo
                                             </div>
                                         )}
                                     </div>
 
-                                    <h3 className={`text-xl font-bold mb-2 transition-colors ${isCompleted ? 'text-white' : 'text-white group-hover:text-cyan-400'}`}>
+                                    <h3 className={`text-xl font-bold mb-2 transition-colors ${isCompleted ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400'}`}>
                                         {block.title}
                                     </h3>
-                                    <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">
+                                    <p className="text-sm text-gray-600 dark:text-gray-500 line-clamp-2 leading-relaxed">
                                         Prověřte své znalosti v modulu {block.title}. Čeká na vás {block.questions.length} otázek.
                                     </p>
                                 </div>
 
-                                <div className="mt-8 flex items-center justify-between border-t border-white/5 pt-4">
-                                    <span className="text-xs font-mono text-gray-600 group-hover:text-gray-400 transition-colors uppercase tracking-wider">
+                                <div className="mt-8 flex items-center justify-between border-t border-gray-100 dark:border-white/5 pt-4">
+                                    <span className="text-xs font-mono text-gray-500 dark:text-gray-600 group-hover:text-gray-700 dark:group-hover:text-gray-400 transition-colors uppercase tracking-wider">
                                         {block.questions.length} otázek
                                     </span>
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isCompleted ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-gray-500 group-hover:bg-cyan-500 group-hover:text-white'}`}>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isCompleted ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-gray-100 dark:bg-white/5 text-gray-400 group-hover:bg-cyan-500 group-hover:text-white'}`}>
                                         <ArrowRight className="w-4 h-4" />
                                     </div>
                                 </div>

@@ -17,10 +17,10 @@ interface BreachResult {
 const TechInsight = ({ title, icon: Icon, children }: { title: string, icon: any, children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="mt-4 border border-white/5 bg-white/5 rounded-xl overflow-hidden">
+    <div className="mt-4 border border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-white/5 rounded-xl overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
       >
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400">
           <Icon className="w-3.5 h-3.5" /> {title}
@@ -28,7 +28,7 @@ const TechInsight = ({ title, icon: Icon, children }: { title: string, icon: any
         {isOpen ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
       </button>
       {isOpen && (
-        <div className="px-4 py-3 border-t border-white/5 text-xs text-gray-400 leading-relaxed font-mono space-y-2 bg-black/20">
+        <div className="px-4 py-3 border-t border-gray-200 dark:border-white/5 text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-mono space-y-2 bg-gray-100 dark:bg-black/20">
           {children}
         </div>
       )}
@@ -116,10 +116,10 @@ const HibpScanner: React.FC<Props> = ({ onBack }) => {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-rose-500/30 bg-rose-500/5 text-rose-400 text-[10px] uppercase tracking-widest mb-4 font-mono">
               <ShieldAlert className="w-3 h-3" /> External Tool
             </div>
-            <h1 className="text-3xl font-display text-white mb-3 uppercase tracking-tight font-bold">
+            <h1 className="text-3xl font-display text-gray-900 dark:text-white mb-3 uppercase tracking-tight font-bold">
               Scanner Úniků Dat
             </h1>
-            <p className="text-gray-400 text-sm leading-relaxed max-w-lg">
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-lg">
               Ověřte si, zda se vaše údaje neobjevily v databázích uniklých hesel. Využíváme oficiální API služby <strong>Have I Been Pwned</strong> (verze 3).
             </p>
           </header>
@@ -133,7 +133,7 @@ const HibpScanner: React.FC<Props> = ({ onBack }) => {
             </button>
             <button
               onClick={() => { setActiveTab('password'); setScanResult({ status: null, data: null }); }}
-              className={`pb-3 text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'password' ? 'text-rose-500 border-b-2 border-rose-500' : 'text-gray-500 hover:text-white'}`}
+              className={`pb-3 text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'password' ? 'text-rose-600 dark:text-rose-500 border-b-2 border-rose-600 dark:border-rose-500' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}
             >
               Heslo
             </button>
@@ -150,7 +150,7 @@ const HibpScanner: React.FC<Props> = ({ onBack }) => {
                     onChange={(e) => setEmail(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && scanEmail()}
                     placeholder="Zadejte e-mail..."
-                    className="relative w-full bg-black/40 border border-white/10 rounded-xl pl-12 pr-4 py-5 text-lg text-white placeholder-gray-600 focus:outline-none focus:border-rose-500/50 transition-all font-mono shadow-inner"
+                    className="relative w-full bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-xl pl-12 pr-4 py-5 text-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-600 focus:outline-none focus:border-rose-500/50 transition-all font-mono shadow-inner"
                   />
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 </div>
@@ -169,7 +169,7 @@ const HibpScanner: React.FC<Props> = ({ onBack }) => {
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && scanPassword()}
                     placeholder="Zadejte heslo..."
-                    className="relative w-full bg-black/40 border border-white/10 rounded-xl pl-12 pr-4 py-5 text-lg text-white placeholder-gray-600 focus:outline-none focus:border-rose-500/50 transition-all font-mono shadow-inner"
+                    className="relative w-full bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-xl pl-12 pr-4 py-5 text-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-600 focus:outline-none focus:border-rose-500/50 transition-all font-mono shadow-inner"
                   />
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 </div>
@@ -183,7 +183,7 @@ const HibpScanner: React.FC<Props> = ({ onBack }) => {
             <button
               onClick={activeTab === 'email' ? scanEmail : scanPassword}
               disabled={isScanning || (activeTab === 'email' ? !email : !password)}
-              className="bg-white text-black hover:bg-rose-50 px-8 py-4 rounded-xl font-bold text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-3 disabled:opacity-30 disabled:hover:bg-white w-full sm:w-auto min-w-[160px]"
+              className="bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-rose-50 px-8 py-4 rounded-xl font-bold text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-3 disabled:opacity-30 disabled:hover:bg-gray-900 dark:disabled:hover:bg-white w-full sm:w-auto min-w-[160px]"
             >
               {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Analyzovat <Search className="w-4 h-4" /></>}
             </button>
@@ -202,12 +202,12 @@ const HibpScanner: React.FC<Props> = ({ onBack }) => {
         {/* Right Column: Results */}
         <div className="lg:col-span-5 relative min-h-[400px]">
           {/* Background Decoration */}
-          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent rounded-3xl border border-white/5 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent rounded-3xl border border-gray-200 dark:border-white/5 pointer-events-none"></div>
 
           <div className="relative z-10 p-8 h-full flex flex-col justify-center">
             {!scanResult.status && !isScanning && (
-              <div className="text-center text-gray-600 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-white/5 mx-auto flex items-center justify-center border border-white/5">
+              <div className="text-center text-gray-500 dark:text-gray-600 space-y-4">
+                <div className="w-16 h-16 rounded-full bg-gray-50 dark:bg-white/5 mx-auto flex items-center justify-center border border-gray-200 dark:border-white/5">
                   <Shield className="w-8 h-8 opacity-20" />
                 </div>
                 <h3 className="text-sm font-bold uppercase tracking-widest opacity-60">Statusové Centrum</h3>
@@ -226,11 +226,11 @@ const HibpScanner: React.FC<Props> = ({ onBack }) => {
 
             {scanResult.status === 'safe' && (
               <div className="text-center animate-fade-in-up">
-                <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
-                  <ShieldCheck className="w-10 h-10 text-emerald-400" />
+                <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                  <ShieldCheck className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <h2 className="text-2xl font-bold text-white mb-3 uppercase tracking-tight">Systém je čistý</h2>
-                <p className="text-sm text-gray-400 leading-relaxed">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 uppercase tracking-tight">Systém je čistý</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                   Gratulujeme! V databázi <strong>Have I Been Pwned</strong> nebyl nalezen žádný záznam.
                 </p>
               </div>
@@ -239,11 +239,11 @@ const HibpScanner: React.FC<Props> = ({ onBack }) => {
             {scanResult.status === 'pwned' && (
               <div className="animate-fade-in-up w-full">
                 <div className="text-center mb-8">
-                  <div className="w-16 h-16 bg-rose-500/10 border border-rose-500/30 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(244,63,94,0.2)]">
-                    <AlertTriangle className="w-8 h-8 text-rose-500" />
+                  <div className="w-16 h-16 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(244,63,94,0.2)]">
+                    <AlertTriangle className="w-8 h-8 text-rose-600 dark:text-rose-500" />
                   </div>
-                  <h2 className="text-xl font-bold text-white mb-2 uppercase tracking-tight">Nalezena shoda!</h2>
-                  <p className="text-xs text-rose-400 font-mono">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 uppercase tracking-tight">Nalezena shoda!</h2>
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-mono">
                     {activeTab === 'email' ? 'Vaše údaje unikly na internet.' : `Heslo uniklo ${scanResult.data.count}-krát.`}
                   </p>
                 </div>
@@ -251,12 +251,12 @@ const HibpScanner: React.FC<Props> = ({ onBack }) => {
                 {activeTab === 'email' && scanResult.data && (
                   <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                     {scanResult.data.map((breach: BreachResult, idx: number) => (
-                      <div key={idx} className="bg-black/40 border border-white/10 p-4 rounded-xl">
+                      <div key={idx} className="bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 p-4 rounded-xl">
                         <div className="flex justify-between items-start mb-2">
-                          <h4 className="text-white text-xs font-bold">{breach.Title}</h4>
-                          <span className="text-[10px] text-rose-400 font-mono">{breach.BreachDate}</span>
+                          <h4 className="text-gray-900 dark:text-white text-xs font-bold">{breach.Title}</h4>
+                          <span className="text-[10px] text-rose-600 dark:text-rose-400 font-mono">{breach.BreachDate}</span>
                         </div>
-                        <p className="text-[10px] text-gray-500 leading-relaxed mb-2" dangerouslySetInnerHTML={{ __html: breach.Description }}></p>
+                        <p className="text-[10px] text-gray-600 dark:text-gray-500 leading-relaxed mb-2" dangerouslySetInnerHTML={{ __html: breach.Description }}></p>
                       </div>
                     ))}
                   </div>

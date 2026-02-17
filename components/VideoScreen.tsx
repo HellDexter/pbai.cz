@@ -18,26 +18,26 @@ const VideoScreen: React.FC<Props> = ({ onBack }) => {
             {/* Header */}
             <header className="mb-12 animate-fade-in-up">
                 <div className="flex items-center gap-3 mb-6">
-                    <div className="p-3 bg-cyan-500/10 rounded-2xl border border-cyan-500/20">
-                        <Film className="w-8 h-8 text-cyan-400" />
+                    <div className="p-3 bg-cyan-50 dark:bg-cyan-500/10 rounded-2xl border border-cyan-200 dark:border-cyan-500/20">
+                        <Film className="w-8 h-8 text-cyan-600 dark:text-cyan-400" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-display text-white uppercase tracking-tight">Videotéka</h1>
-                        <p className="text-gray-400 text-sm">Multimediální knihovna znalostí</p>
+                        <h1 className="text-3xl font-display text-gray-900 dark:text-white uppercase tracking-tight">Videotéka</h1>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">Multimediální knihovna znalostí</p>
                     </div>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-2 max-w-md bg-white/5 p-1.5 rounded-2xl border border-white/5">
+                <div className="flex gap-2 max-w-md bg-gray-100 dark:bg-white/5 p-1.5 rounded-2xl border border-gray-200 dark:border-white/5">
                     <button
                         onClick={() => setActiveTab('cyber')}
-                        className={`flex-1 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'cyber' ? 'bg-cyan-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}
+                        className={`flex-1 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'cyber' ? 'bg-cyan-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}
                     >
                         Kybez
                     </button>
                     <button
                         onClick={() => setActiveTab('ai')}
-                        className={`flex-1 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'ai' ? 'bg-purple-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}
+                        className={`flex-1 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'ai' ? 'bg-purple-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}
                     >
                         AI & Nástroje
                     </button>
@@ -50,7 +50,7 @@ const VideoScreen: React.FC<Props> = ({ onBack }) => {
                     <div
                         key={video.id}
                         onClick={() => setSelectedVideo(video.youtubeId)}
-                        className="group cursor-pointer bg-[#0f0f0f] border border-white/10 rounded-[2rem] overflow-hidden hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-1 shadow-2xl flex flex-col h-full"
+                        className="group cursor-pointer bg-white dark:bg-[#0f0f0f] border border-gray-200 dark:border-white/10 rounded-[2rem] overflow-hidden hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-1 shadow-2xl flex flex-col h-full"
                         style={{ animationDelay: `${idx * 100}ms` }}
                     >
                         {/* Thumbnail */}
@@ -72,15 +72,15 @@ const VideoScreen: React.FC<Props> = ({ onBack }) => {
 
                         {/* Content */}
                         <div className="p-6 flex flex-col flex-grow">
-                            <h3 className="text-lg font-bold text-white mb-2 font-display uppercase tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 font-display uppercase tracking-tight leading-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                                 {video.title}
                             </h3>
-                            <p className="text-xs text-gray-500 leading-relaxed font-light mb-4 line-clamp-3">
+                            <p className="text-xs text-gray-600 dark:text-gray-500 leading-relaxed font-light mb-4 line-clamp-3">
                                 {video.description}
                             </p>
-                            <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between text-[10px] text-gray-500 font-mono uppercase tracking-widest">
+                            <div className="mt-auto pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between text-[10px] text-gray-500 font-mono uppercase tracking-widest">
                                 <span className="flex items-center gap-2"><Clock className="w-3 h-3" /> ~ 10 min</span>
-                                <span className="group-hover:text-cyan-400 transition-colors">Přehrát</span>
+                                <span className="group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">Přehrát</span>
                             </div>
                         </div>
                     </div>
