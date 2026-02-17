@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { cyberVideos, aiVideos } from '../data';
-import { Play, Film, X, Search, Clock, ArrowLeft } from 'lucide-react';
+import { Film, X } from 'lucide-react';
+import VideoCarousel from './VideoCarousel';
 
 interface Props {
     onBack: () => void;
@@ -16,7 +17,7 @@ const VideoScreen: React.FC<Props> = ({ onBack }) => {
     return (
         <div className="max-w-7xl mx-auto px-6 py-8 pb-32">
             {/* Header */}
-            <header className="mb-12 animate-fade-in-up">
+            <header className="mb-8 md:mb-12 animate-fade-in-up">
                 <div className="flex items-center gap-3 mb-6">
                     <div className="p-3 bg-cyan-50 dark:bg-cyan-500/10 rounded-2xl border border-cyan-200 dark:border-cyan-500/20">
                         <Film className="w-8 h-8 text-cyan-600 dark:text-cyan-400" />
@@ -44,52 +45,17 @@ const VideoScreen: React.FC<Props> = ({ onBack }) => {
                 </div>
             </header>
 
-            {/* Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" key={activeTab}>
-                {currentVideos.map((video, idx) => (
-                    <div
-                        key={video.id}
-                        onClick={() => setSelectedVideo(video.youtubeId)}
-                        className="group cursor-pointer bg-white dark:bg-[#0f0f0f] border border-gray-200 dark:border-white/10 rounded-[2rem] overflow-hidden hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-1 shadow-2xl flex flex-col h-full"
-                        style={{ animationDelay: `${idx * 100}ms` }}
-                    >
-                        {/* Thumbnail */}
-                        <div className="aspect-video relative overflow-hidden bg-black">
-                            <img
-                                src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
-                                alt={video.title}
-                                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                            />
-                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform duration-300">
-                                    <Play className="w-6 h-6 text-white fill-current" />
-                                </div>
-                            </div>
-                            <div className="absolute bottom-3 right-3 bg-black/80 px-2 py-1 rounded text-[10px] font-mono font-bold text-white uppercase tracking-widest border border-white/10">
-                                Video
-                            </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-6 flex flex-col flex-grow">
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 font-display uppercase tracking-tight leading-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                                {video.title}
-                            </h3>
-                            <p className="text-xs text-gray-600 dark:text-gray-500 leading-relaxed font-light mb-4 line-clamp-3">
-                                {video.description}
-                            </p>
-                            <div className="mt-auto pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between text-[10px] text-gray-500 font-mono uppercase tracking-widest">
-                                <span className="flex items-center gap-2"><Clock className="w-3 h-3" /> ~ 10 min</span>
-                                <span className="group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">Přehrát</span>
-                            </div>
-                        </div>
-                    </div>
-                ))}
+            {/* Carousel View */}
+            <div className="animate-fade-in-up" key={activeTab}>
+                <VideoCarousel
+                    videos={currentVideos}
+                    onSelectVideo={setSelectedVideo}
+                />
             </div>
 
             {/* Video Modal */}
             {selectedVideo && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10">
                     <div
                         className="absolute inset-0 bg-black/90 backdrop-blur-md animate-fade-in"
                         onClick={() => setSelectedVideo(null)}

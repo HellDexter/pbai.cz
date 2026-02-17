@@ -10,7 +10,8 @@ export const cyberVideos: Video[] = [
   { id: 6, title: "Dvoufaktorové ověření (2FA)", description: "Nejdůležitější vrstva vaší digitální obrany.", youtubeId: "P0Pmiqe9rQg" },
   { id: 7, title: "Veřejné Wi-Fi sítě", description: "Rizika bezplatného internetu v kavárnách.", youtubeId: "UuLCdnZihI4" },
   { id: 8, title: "Zabezpečení mobilního telefonu", description: "Nastavení soukromí ve vašem smartphonu.", youtubeId: "iNmS1ahVWUs" },
-  { id: 9, title: "Pravidla zálohování", description: "Jak nepřijít o svá data při útoku.", youtubeId: "dGJTQgrEc2Y" }
+  { id: 9, title: "Pravidla zálohování", description: "Jak nepřijít o svá data při útoku.", youtubeId: "dGJTQgrEc2Y" },
+  { id: 10, title: "Blok 8: Zákon o kybernetické bezpečnosti", description: "Legislativa, povinnosti a směrnice NIS2 v praxi.", youtubeId: "PjblswnhcYc" }
 ];
 
 export const aiVideos: Video[] = [
